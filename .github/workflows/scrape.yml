@@ -56,6 +56,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ scraper/output/ scraper/scraper.log
+          git add docs/ scraper/output/
           git diff --cached --quiet || git commit -m "🤖 Auto-update: $(date '+%Y-%m-%d %H:%M') (Taiwan Time)"
           git push
