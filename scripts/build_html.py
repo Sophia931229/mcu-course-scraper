@@ -1,0 +1,134 @@
+"""
+根據 output/index.json 產生 docs/index.html（GitHub Pages 入口）
+"""
+
+import json
+from pathlib import Path
+from datetime import datetime
+
+INDEX_JSON = Path("scraper/output/index.json")
+DOCS_DIR   = Path("docs")
+DOCS_DIR.mkdir(exist_ok=True)
+
+
+def build() -> None:
+    if not INDEX_JSON.exists():
+        print("❌ index.json 不存在，略過 HTML 建置")
+        return
+
+    data = json.loads(INDEX_JSON.read_text(encoding="utf-8"))
+    docs = data.get("documents", [])
+    generated = data.get("generated_at", "")
+
+    tag_labels = {
+        "announcement":    "📢 教務處公告",
+        "freshman":        "🎓 新生選課說明",
+        "english":         "🔤 英語教學中心",
+        "course_structure":"📚 開課與課程架構",
+        "other":           "📄 其他",
+    }
+
+    by_tag: dict[str, list[dict]] = {}
+    for d in docs:
+        by_tag.setdefault(d.get("tag", "other"), []).append(d)
+
+    sections_html = ""
+    for tag, items in by_tag.items():
+        label = tag_labels.get(tag, tag)
+        rows  = ""
+        for item in items:
+            fname = Path(item["output_file"]).name
+            ftype = item.get("type", "")
+            badge = (
+                '<span class="badge pdf">PDF</span>' if ftype == "pdf" else
+                '<span class="badge doc">DOC</span>' if ftype in ("doc", "docx") else
+                '<span class="badge web">HTML</span>'
+            )
+            rows += f"""
+            <tr>
+              <td>{badge}</td>
+              <td><a href="{fname}">{item['title']}</a></td>
+              <td><a href="{item['url']}" target="_blank" rel="noopener">原始連結 ↗</a></td>
+              <td>{item.get('scraped_at','')[:19]}</td>
+            </tr>"""
+
+        sections_html += f"""
+        <section>
+          <h2>{label}</h2>
+          <table>
+            <thead><tr><th>類型</th><th>標題 / 文字檔</th><th>原始來源</th><th>爬取時間</th></tr></thead>
+            <tbody>{rows}</tbody>
+          </table>
+        </section>"""
+
+    html = f"""<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>銘傳大學 選課資訊 自動爬蟲</title>
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; }}
+    body {{
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      margin: 0; padding: 0;
+      background: #f5f7fa; color: #2c3e50;
+    }}
+    header {{
+      background: linear-gradient(135deg, #1a3c6e, #2980b9);
+      color: white; padding: 2rem;
+      text-align: center;
+    }}
+    header h1 {{ margin: 0; font-size: 1.8rem; }}
+    header p  {{ margin: .5rem 0 0; opacity: .85; font-size: .95rem; }}
+    .chip {{
+      display: inline-block;
+      background: rgba(255,255,255,.2);
+      border-radius: 999px;
+      padding: .2rem .8rem;
+      font-size: .8rem;
+      margin-top: .6rem;
+    }}
+    main {{ max-width: 960px; margin: 2rem auto; padding: 0 1rem; }}
+    section {{ background: white; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.08);
+               margin-bottom: 1.5rem; padding: 1.5rem; }}
+    h2 {{ margin: 0 0 1rem; font-size: 1.1rem; color: #1a3c6e; border-left: 4px solid #2980b9; padding-left: .6rem; }}
+    table {{ width: 100%; border-collapse: collapse; font-size: .88rem; }}
+    th {{ background: #f0f4f8; padding: .5rem .8rem; text-align: left; color: #555; }}
+    td {{ padding: .5rem .8rem; border-bottom: 1px solid #eee; vertical-align: top; }}
+    tr:last-child td {{ border-bottom: none; }}
+    a {{ color: #2980b9; text-decoration: none; }}
+    a:hover {{ text-decoration: underline; }}
+    .badge {{
+      display: inline-block; padding: .15rem .5rem; border-radius: 4px;
+      font-size: .75rem; font-weight: 600;
+    }}
+    .badge.pdf {{ background: #fde8e8; color: #c0392b; }}
+    .badge.doc {{ background: #e8f0fe; color: #1565c0; }}
+    .badge.web {{ background: #e8f5e9; color: #2e7d32; }}
+    footer {{ text-align: center; color: #888; font-size: .8rem; margin: 2rem 0 3rem; }}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🏫 銘傳大學選課資訊自動爬蟲</h1>
+  <p>自動爬取教務處、英語教學中心等官方頁面的最新選課公告</p>
+  <span class="chip">📅 最後更新：{generated[:19]}</span>
+  <span class="chip">📂 共 {len(docs)} 份文件</span>
+</header>
+<main>
+  {sections_html}
+</main>
+<footer>
+  資料來源：銘傳大學各官方網站 ・ 每日自動更新（GitHub Actions）<br/>
+  本頁僅供資訊彙整，請以各官方網站公告為準。
+</footer>
+</body>
+</html>
+"""
+    (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
+    print(f"✅ docs/index.html 已產生（{len(docs)} 份文件）")
+
+
+if __name__ == "__main__":
+    build()

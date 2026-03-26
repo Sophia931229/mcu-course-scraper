@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+scraper/scraper.log
+scraper/output/_tmp_*
