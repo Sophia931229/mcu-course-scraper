@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-15T04:12:23.349092",
-  "total_documents": 117,
+  "generated_at": "2026-04-15T13:06:06.037666",
+  "total_documents": 118,
   "documents": [
     {
       "url": "https://academic.mcu.edu.tw/",
       "title": "教務處最新公告",
-      "scraped_at": "2026-04-15T04:09:59.421316",
+      "scraped_at": "2026-04-15T13:03:19.238347",
       "tag": "announcement",
       "type": "webpage",
       "output_file": "output/__65a307f2.txt"
@@ -13,7 +13,7 @@
     {
       "url": "https://academic.mcu.edu.tw/2026/01/15/2026-01-15-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e6%95%99%e8%82%b2%e9%83%a8%e5%8f%b0%e7%81%a3%e5%a4%a7%e5%b0%88%e9%99%a2%e6%a0%a1%e4%ba%ba%e5%b7%a5%e6%99%ba%e6%85%a7%e8%81%af/",
       "title": "2026.01.15 114學年度第2學期教育部台灣大專院校人工智慧聯盟(TAICA)主導課程選課",
-      "scraped_at": "2026-04-15T04:10:00.443832",
+      "scraped_at": "2026-04-15T13:03:20.382696",
       "tag": "announcement",
       "type": "webpage",
       "output_file": "output/_ba_e5_b7_a5_e6_99_ba_e6_85_a7_e8_81_af__9ca23a2b.txt"
@@ -21,15 +21,23 @@
     {
       "url": "https://academic.mcu.edu.tw/2026/01/14/2026-01-14-ch/",
       "title": "2026.01.14 114學年度第2學期外校生跨校選課注意事項",
-      "scraped_at": "2026-04-15T04:10:01.906805",
+      "scraped_at": "2026-04-15T13:03:22.181924",
       "tag": "announcement",
       "type": "webpage",
       "output_file": "output/_2026_01_14_2026-01-14-ch__98bf169a.txt"
     },
     {
+      "url": "https://academic.mcu.edu.tw/2025/12/29/2025-12-29-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e5%8e%9f%e7%8f%ad%e5%bf%85%e4%bf%ae%e6%8f%9b%e7%8f%ad%e3%80%81%e8%bc%94%e7%b3%bb%e3%80%81%e9%9b%99%e4%b8%bb%e4%bf%ae%e9%81%b8/",
+      "title": "2025.12.29 114學年度第2學期原班必修換班、輔系、雙主修選課eForm線上填寫申請",
+      "scraped_at": "2026-04-15T13:03:23.035171",
+      "tag": "announcement",
+      "type": "webpage",
+      "output_file": "output/_81_e9_9b_99_e4_b8_bb_e4_bf_ae_e9_81_b8__8879395a.txt"
+    },
+    {
       "url": "https://academic.mcu.edu.tw/?cat=2",
       "title": "教務處公告列表",
-      "scraped_at": "2026-04-15T04:10:04.626278",
+      "scraped_at": "2026-04-15T13:03:25.865149",
       "tag": "announcement",
       "type": "webpage",
       "output_file": "output/__316998ca.txt"
@@ -37,7 +45,7 @@
     {
       "url": "https://academic.mcu.edu.tw/2025/06/25/2025-06-25-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac1%e5%ad%b8%e6%9c%9f%e5%84%aa%e4%b9%85%e8%81%af%e7%9b%9f%e8%b7%a8%e9%a0%98%e5%9f%9f%e5%ad%b8%e5%88%86%e5%ad%b8%e7%a8%8b%e7%94%b3%e8%ab%8b%e8%b3%87/",
       "title": "2025.06.25 114學年度第1學期優久聯盟跨領域學分學程申請資料一覽表114-1各校規定   ●臺北醫學大學 ●淡江大學 ●世新大學 ●中國文化大學 ●中原大學…",
-      "scraped_at": "2026-04-15T04:10:07.567717",
+      "scraped_at": "2026-04-15T13:03:29.445550",
       "tag": "announcement",
       "type": "webpage",
       "output_file": "output/_b8_e7_a8_8b_e7_94_b3_e8_ab_8b_e8_b3_87__d49e3b7a.txt"
@@ -45,7 +53,7 @@
     {
       "url": "https://freshman.mcu.edu.tw/a01/a01-04/",
       "title": "新生選課注意事項",
-      "scraped_at": "2026-04-15T04:10:10.263108",
+      "scraped_at": "2026-04-15T13:03:36.388438",
       "tag": "freshman",
       "type": "webpage",
       "output_file": "output/_a01_a01-04__2368c519.txt"
@@ -53,7 +61,7 @@
     {
       "url": "https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2025/05/114教務報你知.pdf",
       "title": "教務報你知",
-      "scraped_at": "2026-04-15T04:10:17.058423",
+      "scraped_at": "2026-04-15T13:03:44.170420",
       "tag": "freshman",
       "type": "pdf",
       "output_file": "output/t_uploads_sites_112_2025_05_114教務報你知_pdf_ee5af85d.txt"
@@ -61,7 +69,7 @@
     {
       "url": "https://freshman.mcu.edu.tw/a01/a01-04/",
       "title": "選課注意事項",
-      "scraped_at": "2026-04-15T04:10:25.242863",
+      "scraped_at": "2026-04-15T13:03:53.779145",
       "tag": "freshman",
       "type": "webpage",
       "output_file": "output/_a01_a01-04__2368c519.txt"
@@ -69,7 +77,7 @@
     {
       "url": "https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2024/06/Electronic-DM-0614_final.pdf",
       "title": "國際學院旅遊與觀光學程熱情招生中",
-      "scraped_at": "2026-04-15T04:10:29.205123",
+      "scraped_at": "2026-04-15T13:03:58.416564",
       "tag": "freshman",
       "type": "pdf",
       "output_file": "output/112_2024_06_Electronic-DM-0614_final_pdf_9a48c2d6.txt"
@@ -77,7 +85,7 @@
     {
       "url": "https://elc.mcu.edu.tw/%E9%81%B8%E8%AA%B2/",
       "title": "英語教學中心選課",
-      "scraped_at": "2026-04-15T04:10:32.190768",
+      "scraped_at": "2026-04-15T13:04:01.949411",
       "tag": "english",
       "type": "webpage",
       "output_file": "output/__E9_81_B8_E8_AA_B2__71f717bc.txt"
@@ -85,7 +93,7 @@
     {
       "url": "https://elc.mcu.edu.tw/wp-content/uploads/sites/51/2023/04/銘傳大學學生選課辦法內含必修換班之規範條文.pdf",
       "title": "銘傳大學學生選課辦法(內含必修換班之規範條文)",
-      "scraped_at": "2026-04-15T04:10:32.553869",
+      "scraped_at": "2026-04-15T13:04:02.413201",
       "tag": "english",
       "type": "pdf",
       "output_file": "output/tes_51_2023_04_銘傳大學學生選課辦法內含必修換班之規範條文_pdf_6421b1f4.txt"
@@ -93,7 +101,7 @@
     {
       "url": "https://elc.mcu.edu.tw/課程規劃/",
       "title": "課程規劃",
-      "scraped_at": "2026-04-15T04:10:35.012450",
+      "scraped_at": "2026-04-15T13:04:05.325186",
       "tag": "english",
       "type": "webpage",
       "output_file": "output/_課程規劃__3ced470e.txt"
@@ -101,7 +109,7 @@
     {
       "url": "https://elc.mcu.edu.tw/選課/",
       "title": "選課",
-      "scraped_at": "2026-04-15T04:10:36.397305",
+      "scraped_at": "2026-04-15T13:04:06.871543",
       "tag": "english",
       "type": "webpage",
       "output_file": "output/_選課__09216426.txt"
@@ -109,7 +117,7 @@
     {
       "url": "https://academic.mcu.edu.tw/coursestructure/",
       "title": "開課與師資資訊",
-      "scraped_at": "2026-04-15T04:10:38.475859",
+      "scraped_at": "2026-04-15T13:04:08.952189",
       "tag": "course_structure",
       "type": "webpage",
       "output_file": "output/_coursestructure__780de862.txt"
@@ -117,7 +125,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-11.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-11.pdf",
-      "scraped_at": "2026-04-15T04:10:40.265526",
+      "scraped_at": "2026-04-15T13:04:10.949387",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-11_pdf_bbc740c2.txt"
@@ -125,7 +133,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-11-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-11-2.pdf",
-      "scraped_at": "2026-04-15T04:10:42.175559",
+      "scraped_at": "2026-04-15T13:04:13.090170",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-11-2_pdf_cc08d7de.txt"
@@ -133,7 +141,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-52.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-52.pdf",
-      "scraped_at": "2026-04-15T04:10:43.301351",
+      "scraped_at": "2026-04-15T13:04:14.436202",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-52_pdf_ffd8ac44.txt"
@@ -141,7 +149,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-52.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-52.pdf",
-      "scraped_at": "2026-04-15T04:10:44.233958",
+      "scraped_at": "2026-04-15T13:04:15.351828",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-52_pdf_3a79e310.txt"
@@ -149,7 +157,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-56.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-56.pdf",
-      "scraped_at": "2026-04-15T04:10:45.181288",
+      "scraped_at": "2026-04-15T13:04:16.446385",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-56_pdf_8d9311fa.txt"
@@ -157,7 +165,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-53.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-53.pdf",
-      "scraped_at": "2026-04-15T04:10:45.948104",
+      "scraped_at": "2026-04-15T13:04:17.349581",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-53_pdf_672692b5.txt"
@@ -165,7 +173,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-54.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-54.pdf",
-      "scraped_at": "2026-04-15T04:10:47.091707",
+      "scraped_at": "2026-04-15T13:04:18.647751",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-54_pdf_0267dc35.txt"
@@ -173,7 +181,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-54.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-54.pdf",
-      "scraped_at": "2026-04-15T04:10:48.224733",
+      "scraped_at": "2026-04-15T13:04:19.954743",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-54_pdf_ec0a6613.txt"
@@ -181,7 +189,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-57.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-57.pdf",
-      "scraped_at": "2026-04-15T04:10:49.443934",
+      "scraped_at": "2026-04-15T13:04:21.341340",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-57_pdf_0c7f20f7.txt"
@@ -189,7 +197,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-57-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-57-2.pdf",
-      "scraped_at": "2026-04-15T04:10:50.649215",
+      "scraped_at": "2026-04-15T13:04:22.746052",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-57-2_pdf_0115925f.txt"
@@ -197,7 +205,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-70.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-70.pdf",
-      "scraped_at": "2026-04-15T04:10:51.013499",
+      "scraped_at": "2026-04-15T13:04:23.218154",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-70_pdf_9bcab71d.txt"
@@ -205,7 +213,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-70.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-70.pdf",
-      "scraped_at": "2026-04-15T04:10:51.289874",
+      "scraped_at": "2026-04-15T13:04:23.568240",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-70_pdf_49a6a360.txt"
@@ -213,7 +221,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-09.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-09.pdf",
-      "scraped_at": "2026-04-15T04:10:52.113819",
+      "scraped_at": "2026-04-15T13:04:24.457488",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-09_pdf_75810c6e.txt"
@@ -221,7 +229,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-09.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-09.pdf",
-      "scraped_at": "2026-04-15T04:10:53.066244",
+      "scraped_at": "2026-04-15T13:04:25.539264",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-09_pdf_66b9eaf6.txt"
@@ -229,7 +237,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-21.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-21.pdf",
-      "scraped_at": "2026-04-15T04:10:53.961015",
+      "scraped_at": "2026-04-15T13:04:26.534011",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-21_pdf_c9b9f488.txt"
@@ -237,7 +245,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-21.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-21.pdf",
-      "scraped_at": "2026-04-15T04:10:54.748017",
+      "scraped_at": "2026-04-15T13:04:27.451443",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-21_pdf_39b8169b.txt"
@@ -245,7 +253,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-23.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-23.pdf",
-      "scraped_at": "2026-04-15T04:10:55.576092",
+      "scraped_at": "2026-04-15T13:04:28.404839",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-23_pdf_d27ab024.txt"
@@ -253,7 +261,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-23.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-23.pdf",
-      "scraped_at": "2026-04-15T04:10:56.299524",
+      "scraped_at": "2026-04-15T13:04:29.274070",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-23_pdf_fdf6d63a.txt"
@@ -261,7 +269,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-24.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-24.pdf",
-      "scraped_at": "2026-04-15T04:10:57.274148",
+      "scraped_at": "2026-04-15T13:04:30.409817",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-24_pdf_704bc03a.txt"
@@ -269,7 +277,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-24-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-24-2.pdf",
-      "scraped_at": "2026-04-15T04:10:58.150305",
+      "scraped_at": "2026-04-15T13:04:31.423228",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-24-2_pdf_bb1ea9ab.txt"
@@ -277,7 +285,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-04.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-04.pdf",
-      "scraped_at": "2026-04-15T04:10:59.639861",
+      "scraped_at": "2026-04-15T13:04:32.938537",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-04_pdf_2dd37a26.txt"
@@ -285,7 +293,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-74.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-74.pdf",
-      "scraped_at": "2026-04-15T04:11:01.370784",
+      "scraped_at": "2026-04-15T13:04:34.865881",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-74_pdf_654395a1.txt"
@@ -293,7 +301,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-41.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-41.pdf",
-      "scraped_at": "2026-04-15T04:11:03.041187",
+      "scraped_at": "2026-04-15T13:04:36.644345",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-41_pdf_eb5db779.txt"
@@ -301,7 +309,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-41.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-41.pdf",
-      "scraped_at": "2026-04-15T04:11:04.651369",
+      "scraped_at": "2026-04-15T13:04:38.550487",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-41_pdf_cc28d1cb.txt"
@@ -309,7 +317,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-65.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-65.pdf",
-      "scraped_at": "2026-04-15T04:11:05.875577",
+      "scraped_at": "2026-04-15T13:04:39.957383",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-65_pdf_cde68b0d.txt"
@@ -317,7 +325,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-65.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-65.pdf",
-      "scraped_at": "2026-04-15T04:11:07.098255",
+      "scraped_at": "2026-04-15T13:04:41.346223",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-65_pdf_2dc45b0f.txt"
@@ -325,7 +333,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-33.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-33.pdf",
-      "scraped_at": "2026-04-15T04:11:07.885672",
+      "scraped_at": "2026-04-15T13:04:42.206257",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-33_pdf_d3318ca3.txt"
@@ -333,7 +341,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-15.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-15.pdf",
-      "scraped_at": "2026-04-15T04:11:08.567066",
+      "scraped_at": "2026-04-15T13:04:43.003375",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-15_pdf_78f28767.txt"
@@ -341,7 +349,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-26.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-26.pdf",
-      "scraped_at": "2026-04-15T04:11:09.252882",
+      "scraped_at": "2026-04-15T13:04:43.794859",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-26_pdf_1944f5e5.txt"
@@ -349,7 +357,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-26.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-26.pdf",
-      "scraped_at": "2026-04-15T04:11:10.260403",
+      "scraped_at": "2026-04-15T13:04:44.921899",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-26_pdf_bd87b358.txt"
@@ -357,7 +365,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-31.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-31.pdf",
-      "scraped_at": "2026-04-15T04:11:11.378079",
+      "scraped_at": "2026-04-15T13:04:46.115923",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-31_pdf_1ff79c37.txt"
@@ -365,7 +373,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-31.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-31.pdf",
-      "scraped_at": "2026-04-15T04:11:12.515617",
+      "scraped_at": "2026-04-15T13:04:47.346542",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-31_pdf_62d0441a.txt"
@@ -373,7 +381,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-32.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-32.pdf",
-      "scraped_at": "2026-04-15T04:11:13.284920",
+      "scraped_at": "2026-04-15T13:04:48.296361",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-32_pdf_31455b40.txt"
@@ -381,7 +389,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-32.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-32.pdf",
-      "scraped_at": "2026-04-15T04:11:14.194666",
+      "scraped_at": "2026-04-15T13:04:49.256163",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-32_pdf_5153203e.txt"
@@ -389,7 +397,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-14.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-14.pdf",
-      "scraped_at": "2026-04-15T04:11:15.075562",
+      "scraped_at": "2026-04-15T13:04:50.239502",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-14_pdf_0f5ffe6b.txt"
@@ -397,7 +405,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-14.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-14.pdf",
-      "scraped_at": "2026-04-15T04:11:16.183987",
+      "scraped_at": "2026-04-15T13:04:51.438526",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-14_pdf_04045363.txt"
@@ -405,7 +413,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-18.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-18.pdf",
-      "scraped_at": "2026-04-15T04:11:16.874091",
+      "scraped_at": "2026-04-15T13:04:52.256696",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-18_pdf_ddbde32c.txt"
@@ -413,7 +421,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-18.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-18.pdf",
-      "scraped_at": "2026-04-15T04:11:17.828277",
+      "scraped_at": "2026-04-15T13:04:53.351057",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-18_pdf_6546f609.txt"
@@ -421,7 +429,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-19.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-19.pdf",
-      "scraped_at": "2026-04-15T04:11:18.872718",
+      "scraped_at": "2026-04-15T13:04:54.535537",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-19_pdf_a6ff1aa6.txt"
@@ -429,7 +437,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-19.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-19.pdf",
-      "scraped_at": "2026-04-15T04:11:20.252022",
+      "scraped_at": "2026-04-15T13:04:56.059707",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-19_pdf_deb8267f.txt"
@@ -437,7 +445,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-27.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-27.pdf",
-      "scraped_at": "2026-04-15T04:11:21.534672",
+      "scraped_at": "2026-04-15T13:04:57.488079",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-27_pdf_7dadaea4.txt"
@@ -445,7 +453,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-27-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-27-2.pdf",
-      "scraped_at": "2026-04-15T04:11:22.666202",
+      "scraped_at": "2026-04-15T13:04:58.781395",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-27-2_pdf_e8a2a2bc.txt"
@@ -453,7 +461,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-48.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-48.pdf",
-      "scraped_at": "2026-04-15T04:11:23.575098",
+      "scraped_at": "2026-04-15T13:04:59.797030",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-48_pdf_438fb2db.txt"
@@ -461,7 +469,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-48-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-48-2.pdf",
-      "scraped_at": "2026-04-15T04:11:24.388912",
+      "scraped_at": "2026-04-15T13:05:00.698356",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-48-2_pdf_9e2f0d48.txt"
@@ -469,7 +477,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-59.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-59.pdf",
-      "scraped_at": "2026-04-15T04:11:25.367371",
+      "scraped_at": "2026-04-15T13:05:01.754596",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-59_pdf_74a44c97.txt"
@@ -477,7 +485,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-59-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-59-2.pdf",
-      "scraped_at": "2026-04-15T04:11:26.237584",
+      "scraped_at": "2026-04-15T13:05:02.713212",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-59-2_pdf_2d4202fb.txt"
@@ -485,7 +493,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-78.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-78.pdf",
-      "scraped_at": "2026-04-15T04:11:26.676494",
+      "scraped_at": "2026-04-15T13:05:03.259685",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-78_pdf_fdeefda8.txt"
@@ -493,7 +501,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-78.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-78.pdf",
-      "scraped_at": "2026-04-15T04:11:26.980793",
+      "scraped_at": "2026-04-15T13:05:03.619469",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-78_pdf_6dcdcc79.txt"
@@ -501,7 +509,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-81.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-81.pdf",
-      "scraped_at": "2026-04-15T04:11:27.492136",
+      "scraped_at": "2026-04-15T13:05:04.176339",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-81_pdf_1d4d261f.txt"
@@ -509,7 +517,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-81.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-81.pdf",
-      "scraped_at": "2026-04-15T04:11:28.110825",
+      "scraped_at": "2026-04-15T13:05:04.896364",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-81_pdf_1b5e73da.txt"
@@ -517,7 +525,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-82.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-82.pdf",
-      "scraped_at": "2026-04-15T04:11:28.585122",
+      "scraped_at": "2026-04-15T13:05:05.435500",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-82_pdf_97dce650.txt"
@@ -525,7 +533,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-82.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-82.pdf",
-      "scraped_at": "2026-04-15T04:11:29.232070",
+      "scraped_at": "2026-04-15T13:05:06.189064",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-82_pdf_1261be59.txt"
@@ -533,7 +541,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-88.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-88.pdf",
-      "scraped_at": "2026-04-15T04:11:30.249517",
+      "scraped_at": "2026-04-15T13:05:07.283193",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-88_pdf_bc79c792.txt"
@@ -541,7 +549,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-88.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-88.pdf",
-      "scraped_at": "2026-04-15T04:11:31.238303",
+      "scraped_at": "2026-04-15T13:05:08.342510",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-88_pdf_ee52daee.txt"
@@ -549,7 +557,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-89.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-89.pdf",
-      "scraped_at": "2026-04-15T04:11:32.203091",
+      "scraped_at": "2026-04-15T13:05:09.411850",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-89_pdf_3f89ce23.txt"
@@ -557,7 +565,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-89-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-89-2.pdf",
-      "scraped_at": "2026-04-15T04:11:33.132921",
+      "scraped_at": "2026-04-15T13:05:10.432605",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-89-2_pdf_95bdd71a.txt"
@@ -565,7 +573,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-90.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-90.pdf",
-      "scraped_at": "2026-04-15T04:11:33.607888",
+      "scraped_at": "2026-04-15T13:05:11.012059",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-90_pdf_a296f7a6.txt"
@@ -573,7 +581,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-90.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-90.pdf",
-      "scraped_at": "2026-04-15T04:11:34.000087",
+      "scraped_at": "2026-04-15T13:05:11.455303",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-90_pdf_0bd475f6.txt"
@@ -581,7 +589,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-91.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-91.pdf",
-      "scraped_at": "2026-04-15T04:11:34.932650",
+      "scraped_at": "2026-04-15T13:05:12.529268",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-91_pdf_46ec3a21.txt"
@@ -589,7 +597,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-91.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-91.pdf",
-      "scraped_at": "2026-04-15T04:11:36.051019",
+      "scraped_at": "2026-04-15T13:05:13.769513",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-91_pdf_e60ab098.txt"
@@ -597,7 +605,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-22.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-22.pdf",
-      "scraped_at": "2026-04-15T04:11:37.442958",
+      "scraped_at": "2026-04-15T13:05:15.281994",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-22_pdf_d3a13206.txt"
@@ -605,7 +613,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-64-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-64-2.pdf",
-      "scraped_at": "2026-04-15T04:11:38.472107",
+      "scraped_at": "2026-04-15T13:05:16.447773",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-64-2_pdf_ad813ff5.txt"
@@ -613,7 +621,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-86.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-86.pdf",
-      "scraped_at": "2026-04-15T04:11:39.446363",
+      "scraped_at": "2026-04-15T13:05:17.408237",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-86_pdf_3b88bd95.txt"
@@ -621,7 +629,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-96.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-96.pdf",
-      "scraped_at": "2026-04-15T04:11:39.871843",
+      "scraped_at": "2026-04-15T13:05:17.759535",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-96_pdf_eb1eb899.txt"
@@ -629,7 +637,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-96.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-96.pdf",
-      "scraped_at": "2026-04-15T04:11:40.246993",
+      "scraped_at": "2026-04-15T13:05:18.193131",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-96_pdf_0ec4e5b8.txt"
@@ -637,7 +645,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-39.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-39.pdf",
-      "scraped_at": "2026-04-15T04:11:42.038280",
+      "scraped_at": "2026-04-15T13:05:20.149791",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-39_pdf_6fe96d8d.txt"
@@ -645,7 +653,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-39-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-39-2.pdf",
-      "scraped_at": "2026-04-15T04:11:43.980894",
+      "scraped_at": "2026-04-15T13:05:22.284336",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-39-2_pdf_8e7407db.txt"
@@ -653,7 +661,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-40.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-40.pdf",
-      "scraped_at": "2026-04-15T04:11:45.204989",
+      "scraped_at": "2026-04-15T13:05:23.553041",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-40_pdf_75bd172f.txt"
@@ -661,7 +669,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-40.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-40.pdf",
-      "scraped_at": "2026-04-15T04:11:46.251108",
+      "scraped_at": "2026-04-15T13:05:24.745360",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-40_pdf_97ccd2dc.txt"
@@ -669,7 +677,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-67.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-67.pdf",
-      "scraped_at": "2026-04-15T04:11:46.930918",
+      "scraped_at": "2026-04-15T13:05:25.528513",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-67_pdf_806d1a5a.txt"
@@ -677,7 +685,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-67.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-67.pdf",
-      "scraped_at": "2026-04-15T04:11:47.631957",
+      "scraped_at": "2026-04-15T13:05:26.339661",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-67_pdf_23de3939.txt"
@@ -685,7 +693,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-38.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-38.pdf",
-      "scraped_at": "2026-04-15T04:11:48.751257",
+      "scraped_at": "2026-04-15T13:05:27.572370",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-38_pdf_3b1145c9.txt"
@@ -693,7 +701,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-38.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-38.pdf",
-      "scraped_at": "2026-04-15T04:11:49.881292",
+      "scraped_at": "2026-04-15T13:05:28.825768",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-38_pdf_909b6762.txt"
@@ -701,7 +709,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-42.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-42.pdf",
-      "scraped_at": "2026-04-15T04:11:51.189525",
+      "scraped_at": "2026-04-15T13:05:30.181312",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-42_pdf_4cedd517.txt"
@@ -709,7 +717,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-42-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-42-2.pdf",
-      "scraped_at": "2026-04-15T04:11:52.493224",
+      "scraped_at": "2026-04-15T13:05:31.659012",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-42-2_pdf_45a88b5c.txt"
@@ -717,7 +725,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-44.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-44.pdf",
-      "scraped_at": "2026-04-15T04:11:53.901296",
+      "scraped_at": "2026-04-15T13:05:33.104196",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-44_pdf_05e10702.txt"
@@ -725,7 +733,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-44-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-44-2.pdf",
-      "scraped_at": "2026-04-15T04:11:55.611305",
+      "scraped_at": "2026-04-15T13:05:34.848022",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-44-2_pdf_5f0d1cf7.txt"
@@ -733,7 +741,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-60.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-60.pdf",
-      "scraped_at": "2026-04-15T04:11:56.812563",
+      "scraped_at": "2026-04-15T13:05:36.192696",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-60_pdf_fea102d4.txt"
@@ -741,7 +749,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-60-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-60-2.pdf",
-      "scraped_at": "2026-04-15T04:11:57.960978",
+      "scraped_at": "2026-04-15T13:05:37.503015",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-60-2_pdf_868fb9bb.txt"
@@ -749,7 +757,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-61.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-61.pdf",
-      "scraped_at": "2026-04-15T04:11:58.470359",
+      "scraped_at": "2026-04-15T13:05:38.136561",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-61_pdf_a560e654.txt"
@@ -757,7 +765,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-61.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-61.pdf",
-      "scraped_at": "2026-04-15T04:11:59.080891",
+      "scraped_at": "2026-04-15T13:05:38.842186",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-61_pdf_4e143f19.txt"
@@ -765,7 +773,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-62.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-62.pdf",
-      "scraped_at": "2026-04-15T04:11:59.579581",
+      "scraped_at": "2026-04-15T13:05:39.454390",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-62_pdf_01fb833b.txt"
@@ -773,7 +781,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-62.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-62.pdf",
-      "scraped_at": "2026-04-15T04:12:00.145718",
+      "scraped_at": "2026-04-15T13:05:40.117605",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-62_pdf_060cfc50.txt"
@@ -781,7 +789,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-68.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-68.pdf",
-      "scraped_at": "2026-04-15T04:12:01.401801",
+      "scraped_at": "2026-04-15T13:05:41.451749",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-68_pdf_a689a0a0.txt"
@@ -789,7 +797,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-68-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-68-2.pdf",
-      "scraped_at": "2026-04-15T04:12:02.652593",
+      "scraped_at": "2026-04-15T13:05:42.685984",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-68-2_pdf_534a548b.txt"
@@ -797,7 +805,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-43.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-43.pdf",
-      "scraped_at": "2026-04-15T04:12:04.938638",
+      "scraped_at": "2026-04-15T13:05:46.298461",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-43_pdf_027be898.txt"
@@ -805,7 +813,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-79.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-79.pdf",
-      "scraped_at": "2026-04-15T04:12:07.400631",
+      "scraped_at": "2026-04-15T13:05:48.240788",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-79_pdf_966a4512.txt"
@@ -813,7 +821,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-83.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-83.pdf",
-      "scraped_at": "2026-04-15T04:12:08.455283",
+      "scraped_at": "2026-04-15T13:05:49.458474",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-83_pdf_205245b9.txt"
@@ -821,7 +829,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-83.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-83.pdf",
-      "scraped_at": "2026-04-15T04:12:09.445292",
+      "scraped_at": "2026-04-15T13:05:50.615369",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-83_pdf_2eb037c9.txt"
@@ -829,7 +837,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-94.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-94.pdf",
-      "scraped_at": "2026-04-15T04:12:09.839923",
+      "scraped_at": "2026-04-15T13:05:51.120212",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-94_pdf_f7ed8e98.txt"
@@ -837,7 +845,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-94.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-94.pdf",
-      "scraped_at": "2026-04-15T04:12:10.057802",
+      "scraped_at": "2026-04-15T13:05:51.395090",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-94_pdf_6ff83f7b.txt"
@@ -845,7 +853,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-95.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-95.pdf",
-      "scraped_at": "2026-04-15T04:12:10.328962",
+      "scraped_at": "2026-04-15T13:05:51.724098",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-95_pdf_ed58373e.txt"
@@ -853,7 +861,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-95.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-95.pdf",
-      "scraped_at": "2026-04-15T04:12:10.597272",
+      "scraped_at": "2026-04-15T13:05:52.049897",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-95_pdf_84dafcfb.txt"
@@ -861,7 +869,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-98.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-98.pdf",
-      "scraped_at": "2026-04-15T04:12:11.037601",
+      "scraped_at": "2026-04-15T13:05:52.561805",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-98_pdf_0882745b.txt"
@@ -869,7 +877,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-13.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-13.pdf",
-      "scraped_at": "2026-04-15T04:12:12.252409",
+      "scraped_at": "2026-04-15T13:05:53.901780",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-13_pdf_55670f8d.txt"
@@ -877,7 +885,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-13-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-13-2.pdf",
-      "scraped_at": "2026-04-15T04:12:13.473800",
+      "scraped_at": "2026-04-15T13:05:55.094926",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-13-2_pdf_456b149f.txt"
@@ -885,7 +893,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-36.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-36.pdf",
-      "scraped_at": "2026-04-15T04:12:15.391698",
+      "scraped_at": "2026-04-15T13:05:57.208384",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-36_pdf_cbf00650.txt"
@@ -893,7 +901,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-36-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-36-2.pdf",
-      "scraped_at": "2026-04-15T04:12:17.352200",
+      "scraped_at": "2026-04-15T13:05:59.432289",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-36-2_pdf_f3c88d32.txt"
@@ -901,7 +909,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-75.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-75.pdf",
-      "scraped_at": "2026-04-15T04:12:18.412369",
+      "scraped_at": "2026-04-15T13:06:00.727004",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-75_pdf_4f01bcb0.txt"
@@ -909,7 +917,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-75-2.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-75-2.pdf",
-      "scraped_at": "2026-04-15T04:12:19.144461",
+      "scraped_at": "2026-04-15T13:06:01.568477",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/s_93_2025_11_114CourseStructure-75-2_pdf_27606d94.txt"
@@ -917,7 +925,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-76.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-76.pdf",
-      "scraped_at": "2026-04-15T04:12:20.244097",
+      "scraped_at": "2026-04-15T13:06:02.795501",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-76_pdf_cd8c572b.txt"
@@ -925,7 +933,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-05.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-05.pdf",
-      "scraped_at": "2026-04-15T04:12:21.089191",
+      "scraped_at": "2026-04-15T13:06:03.762852",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2023_10_112CourseStructure-05_pdf_89d3293b.txt"
@@ -933,7 +941,7 @@
     {
       "url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-84.pdf",
       "title": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-84.pdf",
-      "scraped_at": "2026-04-15T04:12:22.347638",
+      "scraped_at": "2026-04-15T13:06:05.036093",
       "tag": "course_structure",
       "type": "pdf",
       "output_file": "output/tes_93_2025_11_114CourseStructure-84_pdf_46b67ce0.txt"

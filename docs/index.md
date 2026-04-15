@@ -1,7 +1,7 @@
 # 銘傳大學選課資訊索引
 
-> 最後更新：2026-04-15T04:12:23.349092  
-> 共 117 份文件
+> 最後更新：2026-04-15T13:06:06.037666  
+> 共 118 份文件
 
 ---
 
@@ -10,6 +10,7 @@
 - [教務處最新公告](__65a307f2.txt) `webpage` — https://academic.mcu.edu.tw/
 - [2026.01.15 114學年度第2學期教育部台灣大專院校人工智慧聯盟(TAICA)主導課程選課](_ba_e5_b7_a5_e6_99_ba_e6_85_a7_e8_81_af__9ca23a2b.txt) `webpage` — https://academic.mcu.edu.tw/2026/01/15/2026-01-15-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e6%95%99%e8%82%b2%e9%83%a8%e5%8f%b0%e7%81%a3%e5%a4%a7%e5%b0%88%e9%99%a2%e6%a0%a1%e4%ba%ba%e5%b7%a5%e6%99%ba%e6%85%a7%e8%81%af/
 - [2026.01.14 114學年度第2學期外校生跨校選課注意事項](_2026_01_14_2026-01-14-ch__98bf169a.txt) `webpage` — https://academic.mcu.edu.tw/2026/01/14/2026-01-14-ch/
+- [2025.12.29 114學年度第2學期原班必修換班、輔系、雙主修選課eForm線上填寫申請](_81_e9_9b_99_e4_b8_bb_e4_bf_ae_e9_81_b8__8879395a.txt) `webpage` — https://academic.mcu.edu.tw/2025/12/29/2025-12-29-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e5%8e%9f%e7%8f%ad%e5%bf%85%e4%bf%ae%e6%8f%9b%e7%8f%ad%e3%80%81%e8%bc%94%e7%b3%bb%e3%80%81%e9%9b%99%e4%b8%bb%e4%bf%ae%e9%81%b8/
 - [教務處公告列表](__316998ca.txt) `webpage` — https://academic.mcu.edu.tw/?cat=2
 - [2025.06.25 114學年度第1學期優久聯盟跨領域學分學程申請資料一覽表114-1各校規定   ●臺北醫學大學 ●淡江大學 ●世新大學 ●中國文化大學 ●中原大學…](_b8_e7_a8_8b_e7_94_b3_e8_ab_8b_e8_b3_87__d49e3b7a.txt) `webpage` — https://academic.mcu.edu.tw/2025/06/25/2025-06-25-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac1%e5%ad%b8%e6%9c%9f%e5%84%aa%e4%b9%85%e8%81%af%e7%9b%9f%e8%b7%a8%e9%a0%98%e5%9f%9f%e5%ad%b8%e5%88%86%e5%ad%b8%e7%a8%8b%e7%94%b3%e8%ab%8b%e8%b3%87/
 
