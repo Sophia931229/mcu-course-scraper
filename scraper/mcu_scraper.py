@@ -1,12 +1,11 @@
 """
-銘傳大學選課資訊爬蟲
+銘傳大學選課資訊爬蟲 v2.1
 MCU Course Selection Information Scraper
 
-爬取來源:
-- 教務處公告: https://academic.mcu.edu.tw/
-- 新生選課說明: https://freshman.mcu.edu.tw/a01/a01-04/
-- 英語教學中心選課: https://elc.mcu.edu.tw/選課/
-- 課程架構: https://academic.mcu.edu.tw/coursestructure/
+升級內容：
+- 自動細化 announcement 為 6 個子標籤
+  cross_school / add_drop / ai_alliance / double_major / freshman / english
+- 其他爬取邏輯不變
 """
 
 import os
@@ -78,18 +77,37 @@ TARGET_PAGES = [
     },
 ]
 
-# 選課相關關鍵字（用來篩選有價值的連結）
+# 選課相關關鍵字
 COURSE_KEYWORDS = [
     "選課", "course", "課程", "開課", "停課", "加退選",
     "選課辦法", "選課時間", "選課注意", "課表", "學分",
     "暑修", "補修", "重修", "校際", "網路選課",
 ]
 
+# ── 細化分類規則（只作用在 announcement tag）────────────────────────────
+RECLASSIFY_RULES = [
+    (r"跨校|校際|優久|聯盟跨",             "cross_school"),
+    (r"加退選|加選|退選|停修",              "add_drop"),
+    (r"AI|人工智慧|TAICA",                  "ai_alliance"),
+    (r"輔系|雙主修|學分學程|eForm",         "double_major"),
+    (r"新生|freshman",                      "freshman"),
+    (r"elc\.mcu|英語教學|ELC",              "english"),
+]
+
+def refine_tag(tag: str, title: str, url: str) -> str:
+    """把 announcement 細化成子標籤；其他 tag 保持不變。"""
+    if tag != "announcement":
+        return tag
+    text = (title + " " + url).lower()
+    for pattern, new_tag in RECLASSIFY_RULES:
+        if re.search(pattern, text, re.IGNORECASE):
+            return new_tag
+    return tag
+
 
 # ── 工具函數 ──────────────────────────────────────
 
 def safe_get(url: str, timeout: int = 20) -> requests.Response | None:
-    """帶重試的 GET 請求"""
     for attempt in range(3):
         try:
             resp = SESSION.get(url, timeout=timeout, allow_redirects=True)
@@ -102,7 +120,6 @@ def safe_get(url: str, timeout: int = 20) -> requests.Response | None:
 
 
 def url_to_filename(url: str) -> str:
-    """把 URL 轉成安全的檔案名稱"""
     h = hashlib.md5(url.encode()).hexdigest()[:8]
     parsed = urlparse(url)
     name = re.sub(r"[^\w\-]", "_", parsed.path)[-40:]
@@ -110,13 +127,11 @@ def url_to_filename(url: str) -> str:
 
 
 def is_course_related(text: str) -> bool:
-    """判斷文字是否與選課相關"""
     text_lower = text.lower()
     return any(kw in text_lower for kw in COURSE_KEYWORDS)
 
 
 def extract_text_from_pdf(pdf_bytes: bytes, filename: str) -> str:
-    """從 PDF bytes 擷取純文字"""
     tmp_path = OUTPUT_DIR / f"_tmp_{filename}.pdf"
     tmp_path.write_bytes(pdf_bytes)
     text_parts = []
@@ -136,12 +151,10 @@ def extract_text_from_pdf(pdf_bytes: bytes, filename: str) -> str:
 
 
 def extract_text_from_docx(docx_bytes: bytes, filename: str) -> str:
-    """從 DOCX bytes 擷取純文字"""
     import io
     try:
         doc = docx.Document(io.BytesIO(docx_bytes))
         paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
-        # 也嘗試抓表格內容
         for table in doc.tables:
             for row in table.rows:
                 row_texts = [cell.text.strip() for cell in row.cells if cell.text.strip()]
@@ -154,7 +167,6 @@ def extract_text_from_docx(docx_bytes: bytes, filename: str) -> str:
 
 
 def save_text(slug: str, content: str, meta: dict) -> Path:
-    """把內容存成 .txt 並附上 meta 資訊"""
     out_path = OUTPUT_DIR / f"{slug}.txt"
     header = (
         f"來源: {meta.get('url', '')}\n"
@@ -170,9 +182,8 @@ def save_text(slug: str, content: str, meta: dict) -> Path:
 # ── 核心爬蟲邏輯 ──────────────────────────────────
 
 def scrape_page(page_cfg: dict) -> list[dict]:
-    """爬取單一頁面，回傳所有找到的文件資訊"""
-    url = page_cfg["url"]
-    tag = page_cfg["tag"]
+    url  = page_cfg["url"]
+    tag  = page_cfg["tag"]
     name = page_cfg["name"]
     log.info(f"▶ 爬取: {name} ({url})")
 
@@ -184,22 +195,23 @@ def scrape_page(page_cfg: dict) -> list[dict]:
     soup = BeautifulSoup(resp.content, "lxml")
     results = []
 
-    # 1. 儲存頁面本身的文字
+    # 1. 儲存頁面本身
     page_text = extract_page_text(soup)
     if page_text.strip():
         slug = url_to_filename(url)
+        final_tag = refine_tag(tag, name, url)
         meta = {
             "url": url,
             "title": name,
             "scraped_at": datetime.now().isoformat(),
-            "tag": tag,
+            "tag": final_tag,
             "type": "webpage",
         }
         out = save_text(slug, page_text, meta)
         results.append({**meta, "output_file": str(out)})
-        log.info(f"  ✓ 頁面文字已儲存 → {out.name}")
+        log.info(f"  ✓ 頁面文字已儲存 → {out.name}  [tag={final_tag}]")
 
-    # 2. 找出所有連結，遞迴處理 PDF / DOCX / 子頁
+    # 2. 連結遞迴
     links = find_relevant_links(soup, url)
     for link_url, link_text in links:
         ext = urlparse(link_url).path.lower().split(".")[-1]
@@ -216,12 +228,8 @@ def scrape_page(page_cfg: dict) -> list[dict]:
 
 
 def extract_page_text(soup: BeautifulSoup) -> str:
-    """從 HTML 擷取乾淨的可讀文字"""
-    # 移除 script / style / nav / footer
     for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
         tag.decompose()
-
-    # 嘗試找主內容區塊
     main = (
         soup.find("main")
         or soup.find("article")
@@ -229,10 +237,8 @@ def extract_page_text(soup: BeautifulSoup) -> str:
         or soup.find("div", id=re.compile(r"content|main|post|entry", re.I))
         or soup.body
     )
-
     if main is None:
         return soup.get_text(separator="\n", strip=True)
-
     lines = []
     for elem in main.descendants:
         if elem.name in ("h1", "h2", "h3", "h4"):
@@ -241,93 +247,71 @@ def extract_page_text(soup: BeautifulSoup) -> str:
             t = elem.get_text(strip=True)
             if t:
                 lines.append(t)
-
     return "\n".join(lines)
 
 
 def find_relevant_links(soup: BeautifulSoup, base_url: str) -> list[tuple[str, str]]:
-    """找出頁面中與選課相關的連結"""
     seen = set()
     result = []
-    base_domain = urlparse(base_url).netloc
-
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
         text = a.get_text(strip=True)
         full_url = urljoin(base_url, href)
         parsed = urlparse(full_url)
-
-        # 跳過錨點、javascript、mail
         if parsed.scheme not in ("http", "https"):
             continue
         if full_url in seen:
             continue
         seen.add(full_url)
-
         ext = parsed.path.lower().split(".")[-1]
-
-        # 強制納入 PDF / DOC
         if ext in ("pdf", "doc", "docx"):
             result.append((full_url, text or href))
             continue
-
-        # 只跟蹤 mcu.edu.tw 的子連結
         if "mcu.edu.tw" not in parsed.netloc:
             continue
-
-        # 判斷是否與選課相關
         if is_course_related(text) or is_course_related(href):
             result.append((full_url, text or href))
-
     return result
 
 
-def download_and_convert_doc(url: str, title: str, tag: str) -> dict | None:
-    """下載 PDF / DOCX 並轉換成文字"""
+def download_and_convert_doc(url: str, title: str, base_tag: str) -> dict | None:
     log.info(f"  ↳ 下載文件: {title[:40]} ({url})")
     resp = safe_get(url)
     if resp is None:
         return None
-
     ext = urlparse(url).path.lower().split(".")[-1]
     filename = url_to_filename(url)
-
     if ext == "pdf":
         text = extract_text_from_pdf(resp.content, filename)
     elif ext in ("doc", "docx"):
         text = extract_text_from_docx(resp.content, filename)
     else:
         return None
-
     if not text.strip():
-        log.warning(f"    ✗ 文件為空或無法擷取文字: {url}")
+        log.warning(f"    ✗ 文件為空: {url}")
         return None
-
+    final_tag = refine_tag(base_tag, title, url)
     meta = {
         "url": url,
         "title": title,
         "scraped_at": datetime.now().isoformat(),
-        "tag": tag,
+        "tag": final_tag,
         "type": ext,
     }
     out = save_text(filename, text, meta)
-    log.info(f"    ✓ 已轉換 → {out.name} ({len(text)} 字元)")
+    log.info(f"    ✓ 已轉換 → {out.name} ({len(text)} 字元) [tag={final_tag}]")
     return {**meta, "output_file": str(out)}
 
 
-def scrape_subpage(url: str, title: str, tag: str) -> dict | None:
-    """爬取單一子頁面（不再遞迴）"""
+def scrape_subpage(url: str, title: str, base_tag: str) -> dict | None:
     log.info(f"  ↳ 子頁面: {title[:40]} ({url})")
     resp = safe_get(url)
     if resp is None:
         return None
-
     soup = BeautifulSoup(resp.content, "lxml")
     text = extract_page_text(soup)
     if not text.strip():
         return None
-
-    # 同時也在子頁找文件
     links = find_relevant_links(soup, url)
     extra_texts = []
     for link_url, link_text in links:
@@ -340,64 +324,62 @@ def scrape_subpage(url: str, title: str, tag: str) -> dict | None:
                 else:
                     doc_text = extract_text_from_docx(r.content, url_to_filename(link_url))
                 if doc_text.strip():
-                    extra_texts.append(
-                        f"\n\n[附件: {link_text} — {link_url}]\n{doc_text}"
-                    )
-
+                    extra_texts.append(f"\n\n[附件: {link_text} — {link_url}]\n{doc_text}")
     combined = text + "".join(extra_texts)
+    final_tag = refine_tag(base_tag, title, url)
     meta = {
         "url": url,
         "title": title,
         "scraped_at": datetime.now().isoformat(),
-        "tag": tag,
+        "tag": final_tag,
         "type": "webpage",
     }
     slug = url_to_filename(url)
     out = save_text(slug, combined, meta)
-    log.info(f"    ✓ 子頁面已儲存 → {out.name}")
+    log.info(f"    ✓ 子頁面已儲存 → {out.name} [tag={final_tag}]")
     return {**meta, "output_file": str(out)}
 
 
 # ── 匯總報告 ──────────────────────────────────────
 
-def generate_index(all_results: list[dict]) -> None:
-    """產生 index.md 與 index.json 摘要"""
-    now = datetime.now().isoformat()
+TAG_LABELS = {
+    "announcement":     "📢 教務處公告",
+    "cross_school":     "🏫 校際選課",
+    "add_drop":         "🔄 加退選公告",
+    "ai_alliance":      "🤖 AI 聯盟課程",
+    "double_major":     "🎓 輔系雙主修",
+    "freshman":         "🎓 新生選課說明",
+    "english":          "🌐 英語教學中心",
+    "course_structure": "📚 開課與課程架構",
+    "other":            "📄 其他",
+}
 
-    # JSON index
-    index_json = OUTPUT_DIR / "index.json"
+def generate_index(all_results: list[dict]) -> None:
+    now = datetime.now().isoformat()
     index_data = {
         "generated_at": now,
         "total_documents": len(all_results),
         "documents": all_results,
     }
-    index_json.write_text(json.dumps(index_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    (OUTPUT_DIR / "index.json").write_text(
+        json.dumps(index_data, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
-    # Markdown index
     lines = [
         "# 銘傳大學選課資訊索引",
-        f"",
+        "",
         f"> 最後更新：{now}  ",
         f"> 共 {len(all_results)} 份文件",
         "",
         "---",
         "",
     ]
-
     by_tag: dict[str, list[dict]] = {}
     for r in all_results:
         by_tag.setdefault(r.get("tag", "other"), []).append(r)
 
-    tag_labels = {
-        "announcement": "📢 教務處公告",
-        "freshman": "🎓 新生選課",
-        "english": "🔤 英語教學中心",
-        "course_structure": "📚 開課與課程架構",
-        "other": "📄 其他",
-    }
-
-    for tag, docs in by_tag.items():
-        lines.append(f"## {tag_labels.get(tag, tag)}")
+    for tag, docs in sorted(by_tag.items(), key=lambda x: list(TAG_LABELS).index(x[0]) if x[0] in TAG_LABELS else 99):
+        lines.append(f"## {TAG_LABELS.get(tag, tag)}")
         lines.append("")
         for d in docs:
             fname = Path(d["output_file"]).name
@@ -405,14 +387,23 @@ def generate_index(all_results: list[dict]) -> None:
         lines.append("")
 
     (OUTPUT_DIR / "index.md").write_text("\n".join(lines), encoding="utf-8")
-    log.info(f"✅ 索引已產生 → output/index.md & output/index.json")
+    log.info("✅ 索引已產生 → output/index.md & output/index.json")
+
+    # 統計摘要
+    tag_summary = {}
+    for r in all_results:
+        t = r.get("tag", "other")
+        tag_summary[t] = tag_summary.get(t, 0) + 1
+    log.info("📊 分類統計：")
+    for t, cnt in sorted(tag_summary.items(), key=lambda x: -x[1]):
+        log.info(f"   {TAG_LABELS.get(t, t)}: {cnt} 筆")
 
 
-# ── 主程式入口 ────────────────────────────────────
+# ── 主程式 ────────────────────────────────────────
 
 def main():
     log.info("=" * 60)
-    log.info("銘傳大學選課資訊爬蟲 啟動")
+    log.info("銘傳大學選課資訊爬蟲 v2.1 啟動（細化分類版）")
     log.info(f"時間: {datetime.now().isoformat()}")
     log.info("=" * 60)
 
@@ -423,7 +414,7 @@ def main():
             all_results.extend(results)
         except Exception as e:
             log.error(f"爬取 {page_cfg['name']} 時發生錯誤: {e}", exc_info=True)
-        time.sleep(1)  # 禮貌性延遲
+        time.sleep(1)
 
     generate_index(all_results)
     log.info(f"\n🎉 完成！共儲存 {len(all_results)} 份文件至 output/")
