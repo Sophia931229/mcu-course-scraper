@@ -3,67 +3,115 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>銘傳大學 選課資訊 自動爬蟲</title>
+  <title>銘傳大學選課資訊 | 自動爬蟲</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; margin:0; padding:0; background:#f0f4f8; color:#2c3e50; min-height:100vh; }
-    header { background: linear-gradient(135deg,#1a3c6e,#2471a3); color:white; padding:2rem 1.5rem 1.5rem; text-align:center; }
-    header h1 { margin:0 0 .4rem; font-size:1.75rem; }
-    header p { margin:0; opacity:.85; font-size:.95rem; }
-    .meta-chips { margin-top:.9rem; display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
-    .chip { display:inline-flex; align-items:center; gap:.3rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:.25rem .85rem; font-size:.8rem; }
-    .controls { max-width:1000px; margin:1.4rem auto 0; padding:0 1rem; display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; }
-    .search-wrap { flex:1 1 240px; position:relative; }
-    .search-wrap input { width:100%; padding:.55rem .9rem .55rem 2.3rem; border:1.5px solid #d0dbe8; border-radius:8px; font-size:.9rem; outline:none; background:white; color:#2c3e50; transition:border-color .15s; }
-    .search-wrap input:focus { border-color:#2471a3; }
-    .search-icon { position:absolute; left:.7rem; top:50%; transform:translateY(-50%); color:#9ab; font-size:1rem; pointer-events:none; }
+    :root {
+      --blue: #1d5fa8; --blue-lt: #e8f0fb; --blue-dk: #153f72;
+      --teal: #0d8c6d; --red: #c0392b; --orange: #d35400;
+      --bg: #f0f4f8; --surface: #fff; --border: #d0dbe8;
+      --text: #1e2d40; --muted: #7a94aa;
+    }
+    body { font-family: "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+           margin:0; padding:0; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    /* Header */
+    header { background: linear-gradient(135deg, #0f2d57 0%, #1d5fa8 55%, #0d8c6d 100%);
+              color:#fff; padding:2.2rem 1.5rem 1.6rem; text-align:center; position:relative; overflow:hidden; }
+    header::before { content:''; position:absolute; inset:0; opacity:.05;
+      background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+      background-size: 28px 28px; }
+    header h1 { margin:0 0 .4rem; font-size:1.85rem; font-weight:700; position:relative; letter-spacing:-.01em; }
+    header p { margin:0; opacity:.8; font-size:.92rem; position:relative; }
+    .meta-chips { margin-top:1rem; display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; position:relative; }
+    .chip { display:inline-flex; align-items:center; gap:.4rem;
+             background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22);
+             border-radius:999px; padding:.28rem .95rem; font-size:.78rem; }
+    .pulse { width:8px; height:8px; background:#2ecc71; border-radius:50%;
+              animation:pulse 1.8s ease-in-out infinite; flex-shrink:0; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.75)} }
+
+    /* Sticky controls */
+    .controls-wrap { position:sticky; top:0; z-index:100; background:var(--surface);
+                      box-shadow:0 2px 10px rgba(0,0,0,.08); }
+    .controls { max-width:1120px; margin:0 auto; padding:.85rem 1.2rem; display:flex; gap:.7rem; flex-wrap:wrap; align-items:center; }
+    .search-wrap { flex:1 1 220px; position:relative; }
+    .search-wrap input { width:100%; padding:.55rem .9rem .55rem 2.5rem; border:1.5px solid var(--border);
+                          border-radius:9px; font-size:.9rem; outline:none; color:var(--text);
+                          font-family:inherit; transition:border-color .15s, box-shadow .15s; }
+    .search-wrap input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(29,95,168,.12); }
+    .search-icon { position:absolute; left:.8rem; top:50%; transform:translateY(-50%);
+                    color:var(--muted); pointer-events:none; font-size:1rem; }
     .filter-row { display:flex; gap:.4rem; flex-wrap:wrap; }
-    .filter-btn { padding:.4rem .85rem; border-radius:20px; border:1.5px solid #d0dbe8; background:white; font-size:.82rem; cursor:pointer; color:#555; transition:all .15s; user-select:none; }
-    .filter-btn:hover { border-color:#2471a3; color:#2471a3; }
-    .filter-btn.active { background:#2471a3; border-color:#2471a3; color:white; font-weight:600; }
-    .type-btn { padding:.4rem .85rem; border-radius:20px; border:1.5px solid #d0dbe8; background:white; font-size:.82rem; cursor:pointer; color:#555; transition:all .15s; }
-    .type-btn.pdf.active { background:#fde8e8; border-color:#c0392b; color:#c0392b; font-weight:600; }
-    .type-btn.web.active { background:#e8f5e9; border-color:#2e7d32; color:#2e7d32; font-weight:600; }
-    .results-bar { max-width:1000px; margin:.8rem auto 0; padding:0 1rem; font-size:.82rem; color:#789; }
-    main { max-width:1000px; margin:.8rem auto 3rem; padding:0 1rem; }
-    .cat-section { margin-bottom:1.4rem; }
-    .cat-header { display:flex; align-items:center; gap:.5rem; margin-bottom:.6rem; }
-    .cat-title { font-size:1rem; font-weight:700; color:#1a3c6e; border-left:4px solid #2471a3; padding-left:.6rem; margin:0; }
-    .cat-count { background:#e8f0fb; color:#2471a3; border-radius:999px; padding:.1rem .55rem; font-size:.75rem; font-weight:600; }
-    .card-grid { display:grid; gap:.55rem; }
-    .card { background:white; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.07); padding:.75rem 1rem; display:grid; grid-template-columns:auto 1fr auto; gap:.5rem .8rem; align-items:start; transition:box-shadow .15s; }
-    .card:hover { box-shadow:0 3px 10px rgba(0,0,0,.1); }
+    .filter-btn,.type-btn { padding:.38rem .9rem; border-radius:20px; border:1.5px solid var(--border);
+                   background:var(--surface); font-size:.78rem; cursor:pointer; color:#555;
+                   transition:all .15s; user-select:none; font-family:inherit; }
+    .filter-btn:hover,.type-btn:hover { border-color:var(--blue); color:var(--blue); }
+    .filter-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; font-weight:700; }
+    .btn-count { background:rgba(255,255,255,.25); border-radius:99px; padding:.03rem .42rem; font-size:.7rem; margin-left:.18rem; }
+    .filter-btn:not(.active) .btn-count { background:var(--blue-lt); color:var(--blue); }
+    .type-btn.pdf.active  { background:#fde8e8; border-color:var(--red); color:var(--red); font-weight:700; }
+    .type-btn.web.active  { background:#e8f5e9; border-color:#2e7d32; color:#2e7d32; font-weight:700; }
+
+    /* Stats bar */
+    .results-bar { max-width:1120px; margin:.5rem auto 0; padding:0 1.2rem; font-size:.8rem; color:var(--muted); }
+
+    /* Layout */
+    main { max-width:1120px; margin:.9rem auto 4rem; padding:0 1.2rem; }
+    .cat-section { margin-bottom:1.8rem; }
+    .cat-header { display:flex; align-items:center; gap:.55rem; margin-bottom:.7rem;
+                   border-left:4px solid var(--accent,var(--blue)); padding-left:.7rem; }
+    .cat-title  { font-size:1rem; font-weight:700; color:var(--blue-dk); margin:0; }
+    .cat-count  { background:var(--blue-lt); color:var(--blue); border-radius:999px;
+                   padding:.1rem .55rem; font-size:.72rem; font-weight:700; }
+    .cat-desc   { font-size:.76rem; color:var(--muted); margin-left:.15rem; }
+
+    /* Cards */
+    .card-grid { display:grid; gap:.5rem; }
+    .card { background:var(--surface); border-radius:11px; box-shadow:0 1px 4px rgba(0,0,0,.06);
+             padding:.8rem 1.05rem; display:grid;
+             grid-template-columns:auto 1fr auto; gap:.4rem .9rem; align-items:start;
+             transition:box-shadow .15s, transform .15s; border:1px solid transparent; }
+    .card:hover { box-shadow:0 5px 18px rgba(0,0,0,.1); transform:translateY(-1px); border-color:var(--border); }
     .card.hidden { display:none; }
-    .badge { display:inline-block; padding:.15rem .5rem; border-radius:4px; font-size:.72rem; font-weight:700; white-space:nowrap; margin-top:.15rem; }
-    .badge.pdf { background:#fde8e8; color:#c0392b; }
-    .badge.web { background:#e8f5e9; color:#2e7d32; }
-    .card-body { min-width:0; }
-    .card-title { font-size:.88rem; font-weight:600; color:#1a3c6e; margin:0 0 .25rem; line-height:1.4; }
+    .badge { display:inline-block; padding:.13rem .48rem; border-radius:4px;
+              font-size:.68rem; font-weight:700; white-space:nowrap; margin-top:.18rem; }
+    .badge.pdf     { background:#fde8e8; color:var(--red); }
+    .badge.webpage { background:#e8f5e9; color:#2e7d32; }
+    .badge.doc     { background:var(--blue-lt); color:var(--blue); }
+    .semester-tag { display:inline-block; margin-left:.4rem; padding:.1rem .4rem;
+                     border-radius:4px; font-size:.65rem; background:#fff8e1; color:#b7691a; font-weight:600; }
+    .card-body  { min-width:0; }
+    .card-title { font-size:.87rem; font-weight:600; color:var(--blue-dk); margin:0 0 .25rem; line-height:1.45; }
     .card-title a { color:inherit; text-decoration:none; }
-    .card-title a:hover { color:#2471a3; text-decoration:underline; }
-    .card-meta { font-size:.75rem; color:#9ab; }
-    .card-meta a { color:#2471a3; text-decoration:none; }
+    .card-title a:hover { color:var(--blue); text-decoration:underline; }
+    .card-meta  { font-size:.72rem; color:var(--muted); }
+    .card-meta a { color:var(--blue); text-decoration:none; }
     .card-meta a:hover { text-decoration:underline; }
     .card-actions { display:flex; flex-direction:column; align-items:flex-end; gap:.3rem; }
-    .btn-link { display:inline-block; padding:.25rem .65rem; border-radius:5px; font-size:.75rem; text-decoration:none; white-space:nowrap; }
-    .btn-txt { background:#e8f0fb; color:#2471a3; }
+    .btn-link { display:inline-block; padding:.25rem .68rem; border-radius:6px;
+                 font-size:.72rem; text-decoration:none; white-space:nowrap; font-family:inherit;
+                 transition:background .12s; }
+    .btn-txt { background:var(--blue-lt); color:var(--blue); }
     .btn-txt:hover { background:#c8daef; }
-    .btn-src { background:#f0f4f8; color:#555; }
+    .btn-src { background:var(--bg); color:#555; }
     .btn-src:hover { background:#dde5ee; }
-    .empty { text-align:center; padding:3rem 1rem; color:#aaa; font-size:.95rem; display:none; }
-    .empty.show { display:block; }
-    footer { text-align:center; color:#9ab; font-size:.78rem; margin:0 0 2.5rem; padding:0 1rem; line-height:1.8; }
 
-    /* Loading & error states */
-    #loadingState { text-align:center; padding:4rem 1rem; color:#789; }
-    #loadingState .spinner { display:inline-block; width:36px; height:36px; border:3px solid #d0dbe8; border-top-color:#2471a3; border-radius:50%; animation:spin .8s linear infinite; margin-bottom:1rem; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    #errorState { display:none; text-align:center; padding:4rem 1rem; }
-    #errorState .error-box { display:inline-block; background:#fde8e8; border:1px solid #f5c6c6; border-radius:10px; padding:1.5rem 2rem; color:#c0392b; max-width:500px; }
-    #errorState .error-box h3 { margin:0 0 .5rem; }
-    #errorState .error-box p { margin:0; font-size:.88rem; }
-    .refresh-btn { margin-top:1rem; display:inline-block; padding:.4rem 1rem; background:#2471a3; color:white; border:none; border-radius:6px; font-size:.85rem; cursor:pointer; }
-    .refresh-btn:hover { background:#1a5c8a; }
+    /* New badge */
+    .new-dot { display:inline-block; width:7px; height:7px; background:#e74c3c;
+                border-radius:50%; margin-left:.5rem; vertical-align:middle; }
+
+    .empty { text-align:center; padding:3.5rem 1rem; color:var(--muted); font-size:.9rem; display:none; }
+    .empty.show { display:block; }
+    footer { text-align:center; color:var(--muted); font-size:.75rem; margin:0 0 2.5rem; padding:0 1rem; line-height:1.9; }
+
+    @media(max-width:600px){
+      header h1 { font-size:1.35rem; }
+      .card { grid-template-columns:auto 1fr; }
+      .card-actions { flex-direction:row; flex-wrap:wrap; grid-column:1/-1; }
+    }
   </style>
 </head>
 <body>
@@ -71,953 +119,145 @@
 <header>
   <h1>&#127979; 銘傳大學選課資訊自動爬蟲</h1>
   <p>自動爬取教務處、英語教學中心等官方頁面的最新選課公告</p>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  <span class="chip">📅 最後更新：2026-04-16T02:53:09</span>
-=======
-  <span class="chip">📅 最後更新：2026-04-16T07:10:47</span>
->>>>>>> c9487fe8e4886fdc917ae0ed8d92be3ecae4adef
-=======
-  <span class="chip">📅 最後更新：2026-04-16T09:02:45</span>
->>>>>>> 748d2d4f2b698d6a68de520d429035d2283ce421
-  <span class="chip">📂 共 118 份文件</span>
-</header>
-<main>
-  
-        <section>
-          <h2>📢 教務處公告</h2>
-          <table>
-            <thead><tr><th>類型</th><th>標題 / 文字檔</th><th>原始來源</th><th>爬取時間</th></tr></thead>
-            <tbody>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="__65a307f2.txt">教務處最新公告</a></td>
-              <td><a href="https://academic.mcu.edu.tw/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:03</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_ba_e5_b7_a5_e6_99_ba_e6_85_a7_e8_81_af__9ca23a2b.txt">2026.01.15 114學年度第2學期教育部台灣大專院校人工智慧聯盟(TAICA)主導課程選課</a></td>
-              <td><a href="https://academic.mcu.edu.tw/2026/01/15/2026-01-15-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e6%95%99%e8%82%b2%e9%83%a8%e5%8f%b0%e7%81%a3%e5%a4%a7%e5%b0%88%e9%99%a2%e6%a0%a1%e4%ba%ba%e5%b7%a5%e6%99%ba%e6%85%a7%e8%81%af/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:04</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_2026_01_14_2026-01-14-ch__98bf169a.txt">2026.01.14 114學年度第2學期外校生跨校選課注意事項</a></td>
-              <td><a href="https://academic.mcu.edu.tw/2026/01/14/2026-01-14-ch/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:06</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_81_e9_9b_99_e4_b8_bb_e4_bf_ae_e9_81_b8__8879395a.txt">2025.12.29 114學年度第2學期原班必修換班、輔系、雙主修選課eForm線上填寫申請</a></td>
-              <td><a href="https://academic.mcu.edu.tw/2025/12/29/2025-12-29-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e5%8e%9f%e7%8f%ad%e5%bf%85%e4%bf%ae%e6%8f%9b%e7%8f%ad%e3%80%81%e8%bc%94%e7%b3%bb%e3%80%81%e9%9b%99%e4%b8%bb%e4%bf%ae%e9%81%b8/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:07</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="__316998ca.txt">教務處公告列表</a></td>
-              <td><a href="https://academic.mcu.edu.tw/?cat=2" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:10</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_b8_e7_a8_8b_e7_94_b3_e8_ab_8b_e8_b3_87__d49e3b7a.txt">2025.06.25 114學年度第1學期優久聯盟跨領域學分學程申請資料一覽表114-1各校規定   ●臺北醫學大學 ●淡江大學 ●世新大學 ●中國文化大學 ●中原大學…</a></td>
-              <td><a href="https://academic.mcu.edu.tw/2025/06/25/2025-06-25-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac1%e5%ad%b8%e6%9c%9f%e5%84%aa%e4%b9%85%e8%81%af%e7%9b%9f%e8%b7%a8%e9%a0%98%e5%9f%9f%e5%ad%b8%e5%88%86%e5%ad%b8%e7%a8%8b%e7%94%b3%e8%ab%8b%e8%b3%87/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:13</td>
-            </tr></tbody>
-          </table>
-        </section>
-        <section>
-          <h2>🎓 新生選課說明</h2>
-          <table>
-            <thead><tr><th>類型</th><th>標題 / 文字檔</th><th>原始來源</th><th>爬取時間</th></tr></thead>
-            <tbody>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_a01_a01-04__2368c519.txt">新生選課注意事項</a></td>
-              <td><a href="https://freshman.mcu.edu.tw/a01/a01-04/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:17</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="t_uploads_sites_112_2025_05_114教務報你知_pdf_ee5af85d.txt">教務報你知</a></td>
-              <td><a href="https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2025/05/114教務報你知.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:25</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_a01_a01-04__2368c519.txt">選課注意事項</a></td>
-              <td><a href="https://freshman.mcu.edu.tw/a01/a01-04/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:35</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="112_2024_06_Electronic-DM-0614_final_pdf_9a48c2d6.txt">國際學院旅遊與觀光學程熱情招生中</a></td>
-              <td><a href="https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2024/06/Electronic-DM-0614_final.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:39</td>
-            </tr></tbody>
-          </table>
-        </section>
-        <section>
-          <h2>🔤 英語教學中心</h2>
-          <table>
-            <thead><tr><th>類型</th><th>標題 / 文字檔</th><th>原始來源</th><th>爬取時間</th></tr></thead>
-            <tbody>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="__E9_81_B8_E8_AA_B2__71f717bc.txt">英語教學中心選課</a></td>
-              <td><a href="https://elc.mcu.edu.tw/%E9%81%B8%E8%AA%B2/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:47</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_51_2023_04_銘傳大學學生選課辦法內含必修換班之規範條文_pdf_6421b1f4.txt">銘傳大學學生選課辦法(內含必修換班之規範條文)</a></td>
-              <td><a href="https://elc.mcu.edu.tw/wp-content/uploads/sites/51/2023/04/銘傳大學學生選課辦法內含必修換班之規範條文.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:47</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_課程規劃__3ced470e.txt">課程規劃</a></td>
-              <td><a href="https://elc.mcu.edu.tw/課程規劃/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:50</td>
-            </tr>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_選課__09216426.txt">選課</a></td>
-              <td><a href="https://elc.mcu.edu.tw/選課/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:52</td>
-            </tr></tbody>
-          </table>
-        </section>
-        <section>
-          <h2>📚 開課與課程架構</h2>
-          <table>
-            <thead><tr><th>類型</th><th>標題 / 文字檔</th><th>原始來源</th><th>爬取時間</th></tr></thead>
-            <tbody>
-            <tr>
-              <td><span class="badge web">HTML</span></td>
-              <td><a href="_coursestructure__780de862.txt">開課與師資資訊</a></td>
-              <td><a href="https://academic.mcu.edu.tw/coursestructure/" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:54</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-11_pdf_bbc740c2.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-11.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-11.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:56</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-11-2_pdf_cc08d7de.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-11-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-11-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:58</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-52_pdf_ffd8ac44.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-52.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-52.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:00:59</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-52_pdf_3a79e310.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-52.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-52.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:00</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-56_pdf_8d9311fa.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-56.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-56.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:01</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-53_pdf_672692b5.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-53.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-53.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:02</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-54_pdf_0267dc35.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-54.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-54.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:03</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-54_pdf_ec0a6613.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-54.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-54.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:04</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-57_pdf_0c7f20f7.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-57.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-57.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:06</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-57-2_pdf_0115925f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-57-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-57-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:07</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-70_pdf_9bcab71d.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-70.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-70.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:07</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-70_pdf_49a6a360.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-70.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-70.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:08</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-09_pdf_75810c6e.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-09.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-09.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:08</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-09_pdf_66b9eaf6.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-09.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-09.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:09</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-21_pdf_c9b9f488.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-21.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-21.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:10</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-21_pdf_39b8169b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-21.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-21.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:11</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-23_pdf_d27ab024.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-23.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-23.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:12</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-23_pdf_fdf6d63a.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-23.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-23.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:13</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-24_pdf_704bc03a.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-24.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-24.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:14</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-24-2_pdf_bb1ea9ab.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-24-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-24-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:15</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-04_pdf_2dd37a26.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-04.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-04.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:16</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-74_pdf_654395a1.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-74.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-74.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:18</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-41_pdf_eb5db779.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-41.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-41.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:20</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-41_pdf_cc28d1cb.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-41.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-41.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:22</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-65_pdf_cde68b0d.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-65.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-65.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:23</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-65_pdf_2dc45b0f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-65.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-65.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:24</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-33_pdf_d3318ca3.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-33.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-33.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:25</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-15_pdf_78f28767.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-15.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-15.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:26</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-26_pdf_1944f5e5.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-26.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-26.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:27</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-26_pdf_bd87b358.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-26.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-26.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:28</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-31_pdf_1ff79c37.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-31.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-31.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:29</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-31_pdf_62d0441a.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-31.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-31.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:30</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-32_pdf_31455b40.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-32.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-32.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:31</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-32_pdf_5153203e.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-32.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-32.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:32</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-14_pdf_0f5ffe6b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-14.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-14.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:33</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-14_pdf_04045363.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-14.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-14.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:34</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-18_pdf_ddbde32c.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-18.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-18.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:35</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-18_pdf_6546f609.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-18.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-18.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:36</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-19_pdf_a6ff1aa6.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-19.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-19.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:37</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-19_pdf_deb8267f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-19.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-19.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:39</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-27_pdf_7dadaea4.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-27.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-27.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:40</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-27-2_pdf_e8a2a2bc.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-27-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-27-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:41</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-48_pdf_438fb2db.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-48.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-48.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:42</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-48-2_pdf_9e2f0d48.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-48-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-48-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:43</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-59_pdf_74a44c97.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-59.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-59.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:44</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-59-2_pdf_2d4202fb.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-59-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-59-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:45</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-78_pdf_fdeefda8.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-78.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-78.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:45</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-78_pdf_6dcdcc79.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-78.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-78.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:46</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-81_pdf_1d4d261f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-81.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-81.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:46</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-81_pdf_1b5e73da.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-81.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-81.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:47</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-82_pdf_97dce650.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-82.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-82.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:47</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-82_pdf_1261be59.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-82.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-82.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:48</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-88_pdf_bc79c792.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-88.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-88.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:49</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-88_pdf_ee52daee.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-88.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-88.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:50</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-89_pdf_3f89ce23.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-89.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-89.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:51</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-89-2_pdf_95bdd71a.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-89-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-89-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:52</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-90_pdf_a296f7a6.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-90.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-90.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:53</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-90_pdf_0bd475f6.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-90.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-90.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:53</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-91_pdf_46ec3a21.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-91.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-91.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:54</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-91_pdf_e60ab098.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-91.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-91.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:55</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-22_pdf_d3a13206.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-22.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-22.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:57</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-64-2_pdf_ad813ff5.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-64-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-64-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:58</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-86_pdf_3b88bd95.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-86.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-86.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:59</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-96_pdf_eb1eb899.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-96.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-96.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:01:59</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-96_pdf_0ec4e5b8.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-96.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-96.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:00</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-39_pdf_6fe96d8d.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-39.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-39.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:01</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-39-2_pdf_8e7407db.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-39-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-39-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:03</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-40_pdf_75bd172f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-40.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-40.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:05</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-40_pdf_97ccd2dc.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-40.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-40.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:06</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-67_pdf_806d1a5a.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-67.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-67.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:07</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-67_pdf_23de3939.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-67.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-67.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:07</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-38_pdf_3b1145c9.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-38.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-38.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:08</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-38_pdf_909b6762.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-38.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-38.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:10</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-42_pdf_4cedd517.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-42.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-42.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:11</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-42-2_pdf_45a88b5c.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-42-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-42-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:12</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-44_pdf_05e10702.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-44.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-44.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:14</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-44-2_pdf_5f0d1cf7.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-44-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-44-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:15</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-60_pdf_fea102d4.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-60.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-60.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:17</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-60-2_pdf_868fb9bb.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-60-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-60-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:18</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-61_pdf_a560e654.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-61.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-61.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:19</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-61_pdf_4e143f19.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-61.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-61.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:19</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-62_pdf_01fb833b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-62.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-62.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:20</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-62_pdf_060cfc50.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-62.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-62.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:20</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-68_pdf_a689a0a0.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-68.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-68.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:22</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-68-2_pdf_534a548b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-68-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-68-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:23</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-43_pdf_027be898.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-43.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-43.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:26</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-79_pdf_966a4512.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-79.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-79.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:28</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-83_pdf_205245b9.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-83.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-83.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:30</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-83_pdf_2eb037c9.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-83.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-83.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:31</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-94_pdf_f7ed8e98.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-94.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-94.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:31</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-94_pdf_6ff83f7b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-94.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-94.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:31</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-95_pdf_ed58373e.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-95.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-95.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:31</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-95_pdf_84dafcfb.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-95.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-95.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:32</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-98_pdf_0882745b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-98.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-98.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:32</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-13_pdf_55670f8d.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-13.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-13.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:34</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-13-2_pdf_456b149f.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-13-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-13-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:35</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-36_pdf_cbf00650.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-36.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-36.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:37</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-36-2_pdf_f3c88d32.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-36-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-36-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:39</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-75_pdf_4f01bcb0.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-75.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-75.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:40</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="s_93_2025_11_114CourseStructure-75-2_pdf_27606d94.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-75-2.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-75-2.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:41</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-76_pdf_cd8c572b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-76.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-76.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:42</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2023_10_112CourseStructure-05_pdf_89d3293b.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-05.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-05.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:43</td>
-            </tr>
-            <tr>
-              <td><span class="badge pdf">PDF</span></td>
-              <td><a href="tes_93_2025_11_114CourseStructure-84_pdf_46b67ce0.txt">https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-84.pdf</a></td>
-              <td><a href="https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-84.pdf" target="_blank" rel="noopener">原始連結 ↗</a></td>
-              <td>2026-04-16T09:02:44</td>
-            </tr></tbody>
-          </table>
-        </section>
-=======
   <div class="meta-chips">
-    <span class="chip" id="chipUpdated">&#128197; 載入中…</span>
-    <span class="chip" id="chipTotal">&#128194; 共 — 份文件</span>
-    <span class="chip">&#128260; 每日自動更新 via GitHub Actions</span>
+    <span class="chip">&#128197; 最後更新：2026-04-16T09:02:45</span>
+    <span class="chip">&#128194; 共 118 份文件</span>
+    <span class="chip"><span class="pulse"></span> 每日自動更新 via GitHub Actions</span>
   </div>
 </header>
 
-<div class="controls" id="controls" style="display:none">
-  <div class="search-wrap">
-    <span class="search-icon">&#128269;</span>
-    <input type="text" id="searchInput" placeholder="搜尋標題或來源網址…" autocomplete="off"/>
-  </div>
-  <div class="filter-row" id="filterRow">
-    <!-- populated by JS -->
-  </div>
-  <div class="filter-row">
-    <button class="type-btn pdf" data-type="pdf">PDF</button>
-    <button class="type-btn web" data-type="webpage">網頁</button>
+<div class="controls-wrap">
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="searchInput" placeholder="搜尋標題、學年期、來源…" autocomplete="off"/>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" data-cat="all">全部 <span class="btn-count">118</span></button>
+    <button class="filter-btn" data-cat="announcement">&#128226; 教務處公告 <span class="btn-count">2</span></button>
+    <button class="filter-btn" data-cat="cross_school">&#127981; 校際選課 <span class="btn-count">2</span></button>
+    <button class="filter-btn" data-cat="ai_alliance">&#129302; AI 聯盟課程 <span class="btn-count">1</span></button>
+    <button class="filter-btn" data-cat="double_major">&#127891; 輔系雙主修 <span class="btn-count">1</span></button>
+    <button class="filter-btn" data-cat="freshman">&#127807; 新生選課說明 <span class="btn-count">4</span></button>
+    <button class="filter-btn" data-cat="english">&#127760; 英語教學中心 <span class="btn-count">4</span></button>
+    <button class="filter-btn" data-cat="course_structure">&#128218; 開課與課程架構 <span class="btn-count">104</span></button>
+
+    </div>
+    <div class="filter-row">
+      <button class="type-btn pdf" data-type="pdf">&#128196; PDF</button>
+      <button class="type-btn web" data-type="webpage">&#127760; 網頁</button>
+    </div>
   </div>
 </div>
 
-<div class="results-bar" id="resultsBar"></div>
+<div class="results-bar" id="resultsBar">顯示 118 / 118 筆</div>
 
 <main id="mainContent">
-  <!-- Loading -->
-  <div id="loadingState">
-    <div class="spinner"></div>
-    <p>正在載入最新資料…</p>
-  </div>
-
-  <!-- Error -->
-  <div id="errorState">
-    <div class="error-box">
-      <h3>&#9888; 載入失敗</h3>
-      <p id="errorMsg">無法取得 index.json，請稍後再試。</p>
-      <button class="refresh-btn" onclick="loadData()">重新載入</button>
+  
+  <div class="cat-section" data-cat="announcement">
+    <div class="cat-header" style="--accent:#2471a3">
+      <h2 class="cat-title">&#128226; 教務處公告</h2>
+      <span class="cat-count" id="count-announcement">2</span>
+      <span class="cat-desc">教務處最新官方公告</span>
     </div>
+    <div class="card-grid" id="grid-announcement"></div>
   </div>
-
-  <!-- Sections rendered by JS -->
-  <div id="sections"></div>
+  <div class="cat-section" data-cat="cross_school">
+    <div class="cat-header" style="--accent:#27ae60">
+      <h2 class="cat-title">&#127981; 校際選課</h2>
+      <span class="cat-count" id="count-cross_school">2</span>
+      <span class="cat-desc">優久聯盟、跨校選課</span>
+    </div>
+    <div class="card-grid" id="grid-cross_school"></div>
+  </div>
+  <div class="cat-section" data-cat="ai_alliance">
+    <div class="cat-header" style="--accent:#2980b9">
+      <h2 class="cat-title">&#129302; AI 聯盟課程</h2>
+      <span class="cat-count" id="count-ai_alliance">1</span>
+      <span class="cat-desc">TAICA 人工智慧聯盟課程</span>
+    </div>
+    <div class="card-grid" id="grid-ai_alliance"></div>
+  </div>
+  <div class="cat-section" data-cat="double_major">
+    <div class="cat-header" style="--accent:#8e44ad">
+      <h2 class="cat-title">&#127891; 輔系雙主修</h2>
+      <span class="cat-count" id="count-double_major">1</span>
+      <span class="cat-desc">輔系、雙主修、學分學程</span>
+    </div>
+    <div class="card-grid" id="grid-double_major"></div>
+  </div>
+  <div class="cat-section" data-cat="freshman">
+    <div class="cat-header" style="--accent:#16a085">
+      <h2 class="cat-title">&#127807; 新生選課說明</h2>
+      <span class="cat-count" id="count-freshman">4</span>
+      <span class="cat-desc">大一新生選課注意事項</span>
+    </div>
+    <div class="card-grid" id="grid-freshman"></div>
+  </div>
+  <div class="cat-section" data-cat="english">
+    <div class="cat-header" style="--accent:#1abc9c">
+      <h2 class="cat-title">&#127760; 英語教學中心</h2>
+      <span class="cat-count" id="count-english">4</span>
+      <span class="cat-desc">英語課程 ELC 選課資訊</span>
+    </div>
+    <div class="card-grid" id="grid-english"></div>
+  </div>
+  <div class="cat-section" data-cat="course_structure">
+    <div class="cat-header" style="--accent:#d35400">
+      <h2 class="cat-title">&#128218; 開課與課程架構</h2>
+      <span class="cat-count" id="count-course_structure">104</span>
+      <span class="cat-desc">各系所課程結構</span>
+    </div>
+    <div class="card-grid" id="grid-course_structure"></div>
+  </div>
   <div class="empty" id="emptyState">&#128533; 找不到符合條件的文件</div>
->>>>>>> Stashed changes
 </main>
 
 <footer>
-  資料來源：銘傳大學各官方網站 ・ 每日自動更新（GitHub Actions）<br/>
+  資料來源：銘傳大學各官方網站 ・ 每日自動更新（GitHub Actions 08:00 / 20:00 台灣時間）<br/>
   本頁僅供資訊彙整，請以各官方網站公告為準。
 </footer>
 
 <script>
-const TAG_META = {
-  announcement:     { icon: '📢', label: '教務處公告' },
-  freshman:         { icon: '🎓', label: '新生選課說明' },
-  english:          { icon: '🔠', label: '英語教學中心' },
-  course_structure: { icon: '📚', label: '開課與課程架構' },
-  other:            { icon: '📄', label: '其他' },
-};
-const TAG_ORDER = ['announcement', 'freshman', 'english', 'course_structure', 'other'];
+const DOCS = [{"url": "https://academic.mcu.edu.tw/", "title": "教務處最新公告", "scraped_at": "2026-04-16", "tag": "announcement", "type": "webpage", "semester": "", "output_file": "output/__65a307f2.txt"}, {"url": "https://academic.mcu.edu.tw/2026/01/15/2026-01-15-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e6%95%99%e8%82%b2%e9%83%a8%e5%8f%b0%e7%81%a3%e5%a4%a7%e5%b0%88%e9%99%a2%e6%a0%a1%e4%ba%ba%e5%b7%a5%e6%99%ba%e6%85%a7%e8%81%af/", "title": "2026.01.15 114學年度第2學期教育部台灣大專院校人工智慧聯盟(TAICA)主導課程選課", "scraped_at": "2026-04-16", "tag": "ai_alliance", "type": "webpage", "semester": "", "output_file": "output/_ba_e5_b7_a5_e6_99_ba_e6_85_a7_e8_81_af__9ca23a2b.txt"}, {"url": "https://academic.mcu.edu.tw/2026/01/14/2026-01-14-ch/", "title": "2026.01.14 114學年度第2學期外校生跨校選課注意事項", "scraped_at": "2026-04-16", "tag": "cross_school", "type": "webpage", "semester": "", "output_file": "output/_2026_01_14_2026-01-14-ch__98bf169a.txt"}, {"url": "https://academic.mcu.edu.tw/2025/12/29/2025-12-29-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac2%e5%ad%b8%e6%9c%9f%e5%8e%9f%e7%8f%ad%e5%bf%85%e4%bf%ae%e6%8f%9b%e7%8f%ad%e3%80%81%e8%bc%94%e7%b3%bb%e3%80%81%e9%9b%99%e4%b8%bb%e4%bf%ae%e9%81%b8/", "title": "2025.12.29 114學年度第2學期原班必修換班、輔系、雙主修選課eForm線上填寫申請", "scraped_at": "2026-04-16", "tag": "double_major", "type": "webpage", "semester": "", "output_file": "output/_81_e9_9b_99_e4_b8_bb_e4_bf_ae_e9_81_b8__8879395a.txt"}, {"url": "https://academic.mcu.edu.tw/?cat=2", "title": "教務處公告列表", "scraped_at": "2026-04-16", "tag": "announcement", "type": "webpage", "semester": "", "output_file": "output/__316998ca.txt"}, {"url": "https://academic.mcu.edu.tw/2025/06/25/2025-06-25-114%e5%ad%b8%e5%b9%b4%e5%ba%a6%e7%ac%ac1%e5%ad%b8%e6%9c%9f%e5%84%aa%e4%b9%85%e8%81%af%e7%9b%9f%e8%b7%a8%e9%a0%98%e5%9f%9f%e5%ad%b8%e5%88%86%e5%ad%b8%e7%a8%8b%e7%94%b3%e8%ab%8b%e8%b3%87/", "title": "2025.06.25 114學年度第1學期優久聯盟跨領域學分學程申請資料一覽表114-1各校規定   ●臺北醫學大學 ●淡江大學 ●世新大學 ●中國文化大學 ●中原大學…", "scraped_at": "2026-04-16", "tag": "cross_school", "type": "webpage", "semester": "", "output_file": "output/_b8_e7_a8_8b_e7_94_b3_e8_ab_8b_e8_b3_87__d49e3b7a.txt"}, {"url": "https://freshman.mcu.edu.tw/a01/a01-04/", "title": "新生選課注意事項", "scraped_at": "2026-04-16", "tag": "freshman", "type": "webpage", "semester": "", "output_file": "output/_a01_a01-04__2368c519.txt"}, {"url": "https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2025/05/114教務報你知.pdf", "title": "教務報你知", "scraped_at": "2026-04-16", "tag": "freshman", "type": "pdf", "semester": "", "output_file": "output/t_uploads_sites_112_2025_05_114教務報你知_pdf_ee5af85d.txt"}, {"url": "https://freshman.mcu.edu.tw/a01/a01-04/", "title": "選課注意事項", "scraped_at": "2026-04-16", "tag": "freshman", "type": "webpage", "semester": "", "output_file": "output/_a01_a01-04__2368c519.txt"}, {"url": "https://freshman.mcu.edu.tw/wp-content/uploads/sites/112/2024/06/Electronic-DM-0614_final.pdf", "title": "國際學院旅遊與觀光學程熱情招生中", "scraped_at": "2026-04-16", "tag": "freshman", "type": "pdf", "semester": "", "output_file": "output/112_2024_06_Electronic-DM-0614_final_pdf_9a48c2d6.txt"}, {"url": "https://elc.mcu.edu.tw/%E9%81%B8%E8%AA%B2/", "title": "英語教學中心選課", "scraped_at": "2026-04-16", "tag": "english", "type": "webpage", "semester": "", "output_file": "output/__E9_81_B8_E8_AA_B2__71f717bc.txt"}, {"url": "https://elc.mcu.edu.tw/wp-content/uploads/sites/51/2023/04/銘傳大學學生選課辦法內含必修換班之規範條文.pdf", "title": "銘傳大學學生選課辦法(內含必修換班之規範條文)", "scraped_at": "2026-04-16", "tag": "english", "type": "pdf", "semester": "", "output_file": "output/tes_51_2023_04_銘傳大學學生選課辦法內含必修換班之規範條文_pdf_6421b1f4.txt"}, {"url": "https://elc.mcu.edu.tw/課程規劃/", "title": "課程規劃", "scraped_at": "2026-04-16", "tag": "english", "type": "webpage", "semester": "", "output_file": "output/_課程規劃__3ced470e.txt"}, {"url": "https://elc.mcu.edu.tw/選課/", "title": "選課", "scraped_at": "2026-04-16", "tag": "english", "type": "webpage", "semester": "", "output_file": "output/_選課__09216426.txt"}, {"url": "https://academic.mcu.edu.tw/coursestructure/", "title": "開課與師資資訊", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "webpage", "semester": "", "output_file": "output/_coursestructure__780de862.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-11.pdf", "title": "112課程架構 11", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-11_pdf_bbc740c2.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-11-2.pdf", "title": "114課程架構 11", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-11-2_pdf_cc08d7de.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-52.pdf", "title": "112課程架構 52", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-52_pdf_ffd8ac44.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-52.pdf", "title": "114課程架構 52", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-52_pdf_3a79e310.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-56.pdf", "title": "112課程架構 56", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-56_pdf_8d9311fa.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-53.pdf", "title": "114課程架構 53", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-53_pdf_672692b5.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-54.pdf", "title": "112課程架構 54", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-54_pdf_0267dc35.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-54.pdf", "title": "114課程架構 54", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-54_pdf_ec0a6613.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-57.pdf", "title": "112課程架構 57", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-57_pdf_0c7f20f7.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-57-2.pdf", "title": "114課程架構 57", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-57-2_pdf_0115925f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-70.pdf", "title": "112課程架構 70", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-70_pdf_9bcab71d.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-70.pdf", "title": "114課程架構 70", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-70_pdf_49a6a360.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-09.pdf", "title": "112課程架構 09", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-09_pdf_75810c6e.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-09.pdf", "title": "114課程架構 09", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-09_pdf_66b9eaf6.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-21.pdf", "title": "112課程架構 21", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-21_pdf_c9b9f488.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-21.pdf", "title": "114課程架構 21", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-21_pdf_39b8169b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-23.pdf", "title": "112課程架構 23", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-23_pdf_d27ab024.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-23.pdf", "title": "114課程架構 23", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-23_pdf_fdf6d63a.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-24.pdf", "title": "112課程架構 24", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-24_pdf_704bc03a.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-24-2.pdf", "title": "114課程架構 24", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-24-2_pdf_bb1ea9ab.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-04.pdf", "title": "112課程架構 04", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-04_pdf_2dd37a26.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-74.pdf", "title": "114課程架構 74", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-74_pdf_654395a1.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-41.pdf", "title": "112課程架構 41", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-41_pdf_eb5db779.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-41.pdf", "title": "114課程架構 41", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-41_pdf_cc28d1cb.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-65.pdf", "title": "112課程架構 65", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-65_pdf_cde68b0d.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-65.pdf", "title": "114課程架構 65", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-65_pdf_2dc45b0f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-33.pdf", "title": "112課程架構 33", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-33_pdf_d3318ca3.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-15.pdf", "title": "114課程架構 15", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-15_pdf_78f28767.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-26.pdf", "title": "112課程架構 26", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-26_pdf_1944f5e5.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-26.pdf", "title": "114課程架構 26", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-26_pdf_bd87b358.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-31.pdf", "title": "112課程架構 31", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-31_pdf_1ff79c37.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-31.pdf", "title": "114課程架構 31", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-31_pdf_62d0441a.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-32.pdf", "title": "112課程架構 32", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-32_pdf_31455b40.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-32.pdf", "title": "114課程架構 32", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-32_pdf_5153203e.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-14.pdf", "title": "112課程架構 14", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-14_pdf_0f5ffe6b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-14.pdf", "title": "114課程架構 14", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-14_pdf_04045363.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-18.pdf", "title": "112課程架構 18", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-18_pdf_ddbde32c.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-18.pdf", "title": "114課程架構 18", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-18_pdf_6546f609.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-19.pdf", "title": "112課程架構 19", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-19_pdf_a6ff1aa6.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-19.pdf", "title": "114課程架構 19", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-19_pdf_deb8267f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-27.pdf", "title": "112課程架構 27", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-27_pdf_7dadaea4.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-27-2.pdf", "title": "114課程架構 27", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-27-2_pdf_e8a2a2bc.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-48.pdf", "title": "112課程架構 48", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-48_pdf_438fb2db.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-48-2.pdf", "title": "114課程架構 48", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-48-2_pdf_9e2f0d48.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-59.pdf", "title": "112課程架構 59", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-59_pdf_74a44c97.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-59-2.pdf", "title": "114課程架構 59", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-59-2_pdf_2d4202fb.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-78.pdf", "title": "112課程架構 78", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-78_pdf_fdeefda8.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-78.pdf", "title": "114課程架構 78", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-78_pdf_6dcdcc79.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-81.pdf", "title": "112課程架構 81", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-81_pdf_1d4d261f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-81.pdf", "title": "114課程架構 81", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-81_pdf_1b5e73da.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-82.pdf", "title": "112課程架構 82", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-82_pdf_97dce650.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-82.pdf", "title": "114課程架構 82", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-82_pdf_1261be59.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-88.pdf", "title": "112課程架構 88", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-88_pdf_bc79c792.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-88.pdf", "title": "114課程架構 88", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-88_pdf_ee52daee.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-89.pdf", "title": "112課程架構 89", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-89_pdf_3f89ce23.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-89-2.pdf", "title": "114課程架構 89", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-89-2_pdf_95bdd71a.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-90.pdf", "title": "112課程架構 90", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-90_pdf_a296f7a6.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-90.pdf", "title": "114課程架構 90", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-90_pdf_0bd475f6.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-91.pdf", "title": "112課程架構 91", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-91_pdf_46ec3a21.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-91.pdf", "title": "114課程架構 91", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-91_pdf_e60ab098.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-22.pdf", "title": "112課程架構 22", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-22_pdf_d3a13206.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-64-2.pdf", "title": "114課程架構 64", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-64-2_pdf_ad813ff5.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-86.pdf", "title": "114課程架構 86", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-86_pdf_3b88bd95.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-96.pdf", "title": "112課程架構 96", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-96_pdf_eb1eb899.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-96.pdf", "title": "114課程架構 96", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-96_pdf_0ec4e5b8.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-39.pdf", "title": "112課程架構 39", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-39_pdf_6fe96d8d.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-39-2.pdf", "title": "114課程架構 39", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-39-2_pdf_8e7407db.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-40.pdf", "title": "112課程架構 40", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-40_pdf_75bd172f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-40.pdf", "title": "114課程架構 40", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-40_pdf_97ccd2dc.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-67.pdf", "title": "112課程架構 67", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-67_pdf_806d1a5a.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-67.pdf", "title": "114課程架構 67", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-67_pdf_23de3939.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-38.pdf", "title": "112課程架構 38", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-38_pdf_3b1145c9.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-38.pdf", "title": "114課程架構 38", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-38_pdf_909b6762.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-42.pdf", "title": "112課程架構 42", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-42_pdf_4cedd517.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-42-2.pdf", "title": "114課程架構 42", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-42-2_pdf_45a88b5c.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-44.pdf", "title": "112課程架構 44", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-44_pdf_05e10702.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-44-2.pdf", "title": "114課程架構 44", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-44-2_pdf_5f0d1cf7.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-60.pdf", "title": "112課程架構 60", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-60_pdf_fea102d4.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-60-2.pdf", "title": "114課程架構 60", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-60-2_pdf_868fb9bb.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-61.pdf", "title": "112課程架構 61", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-61_pdf_a560e654.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-61.pdf", "title": "114課程架構 61", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-61_pdf_4e143f19.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-62.pdf", "title": "112課程架構 62", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-62_pdf_01fb833b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-62.pdf", "title": "114課程架構 62", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-62_pdf_060cfc50.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-68.pdf", "title": "112課程架構 68", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-68_pdf_a689a0a0.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-68-2.pdf", "title": "114課程架構 68", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-68-2_pdf_534a548b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-43.pdf", "title": "112課程架構 43", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-43_pdf_027be898.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-79.pdf", "title": "114課程架構 79", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-79_pdf_966a4512.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-83.pdf", "title": "112課程架構 83", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-83_pdf_205245b9.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-83.pdf", "title": "114課程架構 83", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-83_pdf_2eb037c9.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-94.pdf", "title": "112課程架構 94", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-94_pdf_f7ed8e98.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-94.pdf", "title": "114課程架構 94", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-94_pdf_6ff83f7b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-95.pdf", "title": "112課程架構 95", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-95_pdf_ed58373e.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-95.pdf", "title": "114課程架構 95", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-95_pdf_84dafcfb.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-98.pdf", "title": "114課程架構 98", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-98_pdf_0882745b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-13.pdf", "title": "112課程架構 13", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-13_pdf_55670f8d.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-13-2.pdf", "title": "114課程架構 13", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-13-2_pdf_456b149f.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-36.pdf", "title": "112課程架構 36", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-36_pdf_cbf00650.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-36-2.pdf", "title": "114課程架構 36", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-36-2_pdf_f3c88d32.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-75.pdf", "title": "112課程架構 75", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-75_pdf_4f01bcb0.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-75-2.pdf", "title": "114課程架構 75", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/s_93_2025_11_114CourseStructure-75-2_pdf_27606d94.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-76.pdf", "title": "114課程架構 76", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-76_pdf_cd8c572b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2023/10/112CourseStructure-05.pdf", "title": "112課程架構 05", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2023_10_112CourseStructure-05_pdf_89d3293b.txt"}, {"url": "https://academic.mcu.edu.tw/wp-content/uploads/sites/93/2025/11/114CourseStructure-84.pdf", "title": "114課程架構 84", "scraped_at": "2026-04-16", "tag": "course_structure", "type": "pdf", "semester": "", "output_file": "output/tes_93_2025_11_114CourseStructure-84_pdf_46b67ce0.txt"}];
+const TAGS = ["announcement", "add_drop", "cross_school", "ai_alliance", "double_major", "remedial", "class_change", "freshman", "english", "course_structure", "other"];
 
-let DOCS = [];
-let activeCat = 'all';
-let activeType = null;
-let searchQ = '';
-
-// ──────────────────────────────────────────
-// Data loading – fetches index.json at runtime
-// so the page always shows the latest data
-// without needing to regenerate index.html.
-// ──────────────────────────────────────────
-async function loadData() {
-  // Reset UI to loading state
-  document.getElementById('loadingState').style.display = '';
-  document.getElementById('errorState').style.display = 'none';
-  document.getElementById('sections').innerHTML = '';
-  document.getElementById('controls').style.display = 'none';
-  document.getElementById('resultsBar').textContent = '';
-  document.getElementById('emptyState').classList.remove('show');
-
-  try {
-    // Cache-bust so GitHub Pages always serves the freshest file
-    const res = await fetch('index.json?t=' + Date.now());
-    if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
-    const data = await res.json();
-
-    DOCS = (data.documents || []).map(d => ({
-      url:         d.url || '',
-      title:       cleanTitle(d),
-      scraped_at:  (d.scraped_at || '').slice(0, 10),
-      tag:         d.tag || 'other',
-      type:        d.type || '',
-      output_file: d.output_file || '',
-    }));
-
-    // Update header chips
-    const generated = data.generated_at || '';
-    document.getElementById('chipUpdated').textContent = '📅 最後更新：' + generated.slice(0, 19).replace('T', ' ');
-    document.getElementById('chipTotal').textContent   = '📂 共 ' + DOCS.length + ' 份文件';
-
-    // Build filter buttons
-    buildFilterButtons();
-
-    // Render cards
-    buildSections();
-
-    // Show controls
-    document.getElementById('controls').style.display = '';
-    document.getElementById('loadingState').style.display = 'none';
-
-    // Apply current filter state
-    applyFilters();
-
-  } catch (err) {
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('errorState').style.display = '';
-    document.getElementById('errorMsg').textContent = err.message || '無法取得 index.json，請稍後再試。';
-    console.error('[mcu-scraper] failed to load index.json:', err);
-  }
+// 判斷是否為 7 天內新文件
+const NOW = Date.now();
+function isNew(dateStr) {
+  if (!dateStr) return false;
+  return (NOW - new Date(dateStr).getTime()) < 7 * 86400000;
 }
 
-function cleanTitle(doc) {
-  const title = (doc.title || '').trim();
-  if (!title || title.startsWith('https://')) {
-    const url = doc.url || '';
-    let fname = url.replace(/\/$/, '').split('/').pop();
-    fname = fname.replace('.pdf', '').replace(/-/g, ' ').replace(/_/g, ' ');
-    return fname || url;
-  }
-  return title;
+function badgeClass(type) {
+  if (type === 'pdf') return 'pdf';
+  if (type === 'webpage') return 'webpage';
+  return 'doc';
+}
+function badgeLabel(type) {
+  if (type === 'pdf') return 'PDF';
+  if (type === 'webpage') return '網頁';
+  return type.toUpperCase();
 }
 
-function getFileName(f) { return f.split('/').pop(); }
+function getFileName(f) { return (f || '').split('/').pop(); }
 
-// Build per-tag filter buttons dynamically from the loaded data
-function buildFilterButtons() {
-  const row = document.getElementById('filterRow');
-  row.innerHTML = '<button class="filter-btn active" data-cat="all">全部</button>\n';
-  TAG_ORDER.forEach(tag => {
-    const count = DOCS.filter(d => d.tag === tag).length;
-    if (count === 0) return;
-    const { icon, label } = TAG_META[tag] || { icon: '📄', label: tag };
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.dataset.cat = tag;
-    btn.textContent = icon + ' ' + label;
-    row.appendChild(btn);
-  });
-
-  // Re-attach listeners
-  row.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeCat = btn.dataset.cat;
-      applyFilters();
-    });
-  });
-}
-
-// Build section skeletons + card HTML
-function buildSections() {
-  const container = document.getElementById('sections');
-  container.innerHTML = '';
-
-  TAG_ORDER.forEach(tag => {
+function renderCards() {
+  TAGS.forEach(tag => {
+    const grid = document.getElementById('grid-' + tag);
+    if (!grid) return;
     const items = DOCS.filter(d => d.tag === tag);
-    if (items.length === 0) return;
-
-    const { icon, label } = TAG_META[tag] || { icon: '📄', label: tag };
-
-    const sec = document.createElement('div');
-    sec.className = 'cat-section';
-    sec.dataset.cat = tag;
-    sec.innerHTML = `
-      <div class="cat-header">
-        <h2 class="cat-title">${icon} ${label}</h2>
-        <span class="cat-count" id="count-${tag}">${items.length}</span>
-      </div>
-      <div class="card-grid" id="grid-${tag}"></div>`;
-    container.appendChild(sec);
-
-    const grid = sec.querySelector('.card-grid');
     grid.innerHTML = items.map(item => {
-      const fname   = getFileName(item.output_file);
-      const isWeb   = item.type === 'webpage';
-      const badge   = isWeb
-        ? '<span class="badge web">網頁</span>'
-        : '<span class="badge pdf">PDF</span>';
-      const search  = (item.title + ' ' + item.url).toLowerCase();
-      return `<div class="card" data-tag="${item.tag}" data-type="${item.type}" data-search="${search.replace(/"/g,'&quot;')}">
-        <div>${badge}</div>
+      const fname = getFileName(item.output_file);
+      const bc    = badgeClass(item.type);
+      const bl    = badgeLabel(item.type);
+      const newDot = isNew(item.scraped_at) ? '<span class="new-dot" title="7天內新增"></span>' : '';
+      const sem   = item.semester ? `<span class="semester-tag">${item.semester}</span>` : '';
+      return `<div class="card" data-tag="${item.tag}" data-type="${item.type}" data-search="${(item.title+' '+item.url+' '+item.semester).toLowerCase()}">
+        <div><span class="badge ${bc}">${bl}</span></div>
         <div class="card-body">
-          <p class="card-title"><a href="${fname}">${escHtml(item.title)}</a></p>
-          <span class="card-meta">爬取：${item.scraped_at} &nbsp;·&nbsp;
-            <a href="${item.url}" target="_blank" rel="noopener">原始頁面 ↗</a>
-          </span>
+          <p class="card-title"><a href="${fname}">${item.title}</a>${newDot}${sem}</p>
+          <span class="card-meta">爬取：${item.scraped_at} &nbsp;·&nbsp; <a href="${item.url}" target="_blank" rel="noopener">原始頁面 ↗</a></span>
         </div>
         <div class="card-actions">
           <a class="btn-link btn-txt" href="${fname}">📄 查看文字</a>
@@ -1028,63 +268,61 @@ function buildSections() {
   });
 }
 
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+let activeCat='all', activeType=null, searchQ='';
 
 function applyFilters() {
   const cards = document.querySelectorAll('.card');
   let visible = 0;
 
-  // Show/hide sections
-  document.querySelectorAll('.cat-section').forEach(sec => {
-    sec.style.display = (activeCat === 'all' || activeCat === sec.dataset.cat) ? '' : 'none';
+  TAGS.forEach(tag => {
+    const sec = document.querySelector('.cat-section[data-cat="'+tag+'"]');
+    if (sec) sec.style.display = (activeCat==='all' || activeCat===tag) ? '' : 'none';
   });
 
-  // Show/hide cards
   cards.forEach(card => {
-    const ok = (activeCat === 'all' || activeCat === card.dataset.tag)
-            && (!activeType  || card.dataset.type  === activeType)
-            && (!searchQ     || card.dataset.search.includes(searchQ));
+    const ok = (activeCat==='all' || activeCat===card.dataset.tag)
+            && (!activeType || card.dataset.type===activeType)
+            && (!searchQ   || card.dataset.search.includes(searchQ));
     card.classList.toggle('hidden', !ok);
     if (ok) visible++;
   });
 
-  // Update per-section counts
-  TAG_ORDER.forEach(tag => {
-    const el = document.getElementById('count-' + tag);
-    if (el) el.textContent = document.querySelectorAll(
-      `.cat-section[data-cat="${tag}"] .card:not(.hidden)`
-    ).length;
+  TAGS.forEach(tag => {
+    const el = document.getElementById('count-'+tag);
+    if (el) el.textContent = document.querySelectorAll('.cat-section[data-cat="'+tag+'"] .card:not(.hidden)').length;
   });
 
   document.getElementById('resultsBar').textContent = `顯示 ${visible} / ${DOCS.length} 筆`;
-  document.getElementById('emptyState').classList.toggle('show', visible === 0 && DOCS.length > 0);
+  document.getElementById('emptyState').classList.toggle('show', visible===0);
 }
 
-// Type buttons
-document.querySelectorAll('.type-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.classList.contains('active')) {
-      btn.classList.remove('active');
-      activeType = null;
-    } else {
-      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      activeType = btn.dataset.type;
-    }
-    applyFilters();
-  });
-});
-
-// Search
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchQ = e.target.value.trim().toLowerCase();
+document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
   applyFilters();
+}));
+
+document.querySelectorAll('.type-btn').forEach(btn => btn.addEventListener('click', () => {
+  if (btn.classList.contains('active')) { btn.classList.remove('active'); activeType=null; }
+  else {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); activeType = btn.dataset.type;
+  }
+  applyFilters();
+}));
+
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQ = e.target.value.trim().toLowerCase();
+    applyFilters();
+  }, 150);
 });
 
-// ── Bootstrap ──
-loadData();
+renderCards();
+applyFilters();
 </script>
 </body>
 </html>
