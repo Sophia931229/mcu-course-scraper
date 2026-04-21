@@ -1,12 +1,9 @@
 name: MCU Course Scraper
 
 on:
-  # 每天台灣時間 08:00 & 20:00（UTC 00:00 & 12:00）
   schedule:
-    - cron: "0 0 * * *"
-    - cron: "0 12 * * *"
-
-  # 手動觸發
+    - cron: "0 0 * * *"   # 台灣時間 08:00
+    - cron: "0 12 * * *"  # 台灣時間 20:00
   workflow_dispatch:
     inputs:
       reason:
@@ -19,17 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
-
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
@@ -49,9 +39,7 @@ jobs:
       - name: 📄 Build HTML & copy assets to docs/
         run: |
           mkdir -p docs
-          # 複製所有 output 檔案（txt + json + md）到 docs/
           cp -r scraper/output/. docs/
-          # 建立 docs/index.html 入口頁（讀取 docs/index.json）
           python scripts/build_html.py
 
       - name: 💾 Commit & push results
